@@ -14,7 +14,7 @@ let
     "https://github.com/icebox-nix/netkit.nix/archive/master.tar.gz";
 in {
   imports = [
-	# Other imports omitted
+    # Other imports omitted
     "${icebox}"
     "${netkit}"
   ];
@@ -39,8 +39,8 @@ in {
       };
     };
 
-	# Other parts omitted.
-	# NOTE: std may be required but we don't elaborate it here. See prerequisite for detail.
+    # Other parts omitted.
+    # NOTE: std may be required but we don't elaborate it here. See prerequisite for detail.
   };
 }
 ```
