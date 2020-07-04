@@ -1,8 +1,11 @@
 # netkit.nix
-Verstile icebox plugins for advanced networking scenarios in NixOS.
+Versatile icebox plugins for advanced networking scenarios in NixOS.
 
 # What is it?
 Intended to work out-of-box without any complicated configuration, `netkit.nix` is a set of [icebox](https://github.com/icebox-nix/icebox) purely declarative plugins for networking scenarios, such as versatile transparent proxy, sharing Wi-Fi through Wi-Fi.
+
+# Prerequisite
+You need to have [std](https://github.com/icebox-nix/std) configured properly. Specific options required are listed in Wiki pages.
 
 # How to use it?
 Code like this in your `configuration.nix`
@@ -21,10 +24,10 @@ in {
 
   icebox = {
     system = {
-      plugins = [ "clash" "wifi-relay" ];
-      stateVersion = "19.09"; # Change it!
+      plugins = [ "clash" "wifi-relay" ]; # List of plugins to enable
+      stateVersion = "19.09"; # Change it according to your system
       configs = {
-	    # Configurations for other plugins omitted
+        # Configurations for other plugins omitted
         clash = {
           enable = true;
           redirPort =
