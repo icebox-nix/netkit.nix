@@ -94,22 +94,32 @@ in {
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1; # Enable package forwarding.
 
-    systemd.services.wifi-relay = let inherit (pkgs) iptables gnugrep;
+    systemd.services.wifi-relay = let
+      inherit (pkgs) iptables gnugrep;
+      postStopScript = pkgs.writeShellScript "wifi-relay-poststop" ''
+        ${iptables}/bin/iptables-save -c | ${gnugrep}/bin/grep -v "wlan-[A-Za-z ]*0" | ${iptables}/bin/iptables-restore -c
+      '';
     in {
       description = "iptables rules for wifi-relay";
       after = [ "dhcpd4.service" ];
       wantedBy = [ "multi-user.target" ];
-      # NAT the packets if the packets are from the wlan-ap0 LAN to the Internet
+      # NAT the packets if the packet is not going out to our LAN but is from our LAN.
       # ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
       # Accept the packets from wlan-ap0 to forward them to the outer world
       # ${iptables}/bin/iptables -w -I FORWARD -i wlan-ap0 -s 192.168.12.0/24 -j ACCEPT
       # Accept the packets from wlan-station0 to forward them back to the LAN
-      # ${iptables}/bin/iptables -w -I FORWARD -i wlan-ap0 -s 192.168.12.0/24 -j ACCEPT
+      # ${iptables}/bin/iptables -w -I FORWARD -i wlan-station0 -d 192.168.12.0/24 -j ACCEPT
       script = ''
         ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
         ${iptables}/bin/iptables -w -I FORWARD -i wlan-ap0 -s 192.168.12.0/24 -j ACCEPT
         ${iptables}/bin/iptables -w -I FORWARD -i wlan-station0 -d 192.168.12.0/24 -j ACCEPT
       '';
+      serviceConfig = {
+        # We want to keep it up, else the rules set up are discarded immediately.
+        Type = "oneshot";
+        RemainAfterExit = true; # Used together with oneshot
+        ExecStopPost = postStopScript;
+      };
     };
   };
 }
