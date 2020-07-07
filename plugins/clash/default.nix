@@ -121,8 +121,8 @@ in {
       # Don't start if the config file doesn't exist.
       unitConfig = { ConditionPathExists = configPath; };
       serviceConfig = {
-        ExecStartPre =
-          "+${preStartScript}"; # Use prefix `+` to run iptables as root/
+        # Use prefix `+` to run iptables as root.
+        ExecStartPre = "+${preStartScript}";
         ExecStopPost = "+${postStopScript}";
         # CAP_NET_BIND_SERVICE: Bind arbitary ports by unprivileged user.
         # CAP_NET_ADMIN: Listen on UDP.

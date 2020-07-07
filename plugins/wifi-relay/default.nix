@@ -90,7 +90,7 @@ in {
     };
     networking.firewall.allowedUDPPorts = [ 53 67 ]; # DNS & DHCP
     services.haveged.enable =
-      config.services.hostapd.enable; # Sometimes slow connection speeds are attributed to absence of haveged.
+      true; # Sometimes slow connection speeds are attributed to absence of haveged.
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1; # Enable package forwarding.
 
