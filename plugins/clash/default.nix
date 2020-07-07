@@ -60,7 +60,6 @@ in {
       (self: super: {
         maxmind-geoip = (super.callPackage ./packages/maxmind-geoip.nix { });
         yacd = (super.callPackage ./packages/yacd.nix { });
-        clash = (super.callPackage ./packages/clash.nix { });
       })
     ];
 
