@@ -36,6 +36,13 @@ in {
       description = "DNS address to advertise through DHCP";
       example = "192.168.12.1, 8.8.8.8, 1.1.1.1";
     };
+
+    unitsAfter = mkOption {
+      default = [ ];
+      type = with types; listOf str;
+      description =
+        "List of systemd units should be start after LAN Network is reacheable.";
+    };
   };
 
   config = mkIf (cfg.enable) {
@@ -102,6 +109,7 @@ in {
     in {
       description = "iptables rules for wifi-relay";
       after = [ "dhcpd4.service" ];
+      before = cfg.unitsAfter;
       wantedBy = [ "multi-user.target" ];
       # NAT the packets if the packet is not going out to our LAN but is from our LAN.
       # ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
