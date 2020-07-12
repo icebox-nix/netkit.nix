@@ -108,11 +108,9 @@ in {
       '';
     in {
       description = "iptables rules for wifi-relay";
-      # It is fine to run before dhcpd, since it doesn't deal with client address assignment.
-      after = [ "hostapd.service" ];
-      wantedBy = [ "multi-user.target" ];
+      after = [ "dhcpd4.service" "hostapd.service" ];
       before = cfg.unitsAfter;
-
+      wantedBy = [ "multi-user.target" ];
       # NAT the packets if the packet is not going out to our LAN but is from our LAN.
       # ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
       # Accept the packets from wlan-ap0 to forward them to the outer world
