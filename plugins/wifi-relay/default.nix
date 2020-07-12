@@ -108,7 +108,7 @@ in {
       '';
     in {
       description = "iptables rules for wifi-relay";
-      after = [ "dhcpd4.service" ];
+      after = [ "dhcpd4.service" "hostapd.service" ];
       before = cfg.unitsAfter;
       wantedBy = [ "multi-user.target" ];
       # NAT the packets if the packet is not going out to our LAN but is from our LAN.
