@@ -101,6 +101,17 @@ in {
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1; # Enable package forwarding.
 
+    # Chain of "requires"
+    systemd.services.hostapd.requires = [ "dhcpd4.service" ];
+
+    systemd.services.dhcpd4 = {
+      requires = [ "wifi-relay.service" ];
+      # Start DHCP server after network interface being configured and iptables rules being set.
+      after = [ "hostapd.service" "wifi-relay.service" ];
+      before = cfg.unitsAfter;
+      unitConfig.StopWhenUnneeded = true;
+    };
+
     systemd.services.wifi-relay = let
       inherit (pkgs) iptables gnugrep;
       postStopScript = pkgs.writeShellScript "wifi-relay-poststop" ''
@@ -108,9 +119,7 @@ in {
       '';
     in {
       description = "iptables rules for wifi-relay";
-      after = [ "dhcpd4.service" "hostapd.service" ];
-      before = cfg.unitsAfter;
-      wantedBy = [ "multi-user.target" ];
+      unitConfig.StopWhenUnneeded = true;
       # NAT the packets if the packet is not going out to our LAN but is from our LAN.
       # ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
       # Accept the packets from wlan-ap0 to forward them to the outer world
