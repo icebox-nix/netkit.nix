@@ -102,12 +102,13 @@ in {
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1; # Enable package forwarding.
 
     # Chain of "requires"
-    systemd.services.hostapd.requires = [ "dhcpd4.service" ];
+    # hostapd -> wifi-relay -> dhcpd4
+    systemd.services.hostapd.requires = [ "wifi-relay.service" ];
 
     systemd.services.dhcpd4 = {
-      requires = [ "wifi-relay.service" ];
-      # Start DHCP server after network interface being configured and iptables rules being set.
-      after = [ "hostapd.service" "wifi-relay.service" ];
+      # Don't enable this unit
+      wantedBy = mkForce [ ];
+      after = [ "wifi-relay.service" ];
       before = cfg.unitsAfter;
       unitConfig.StopWhenUnneeded = true;
     };
@@ -119,6 +120,8 @@ in {
       '';
     in {
       description = "iptables rules for wifi-relay";
+      requires = [ "dhcpd4.service" ];
+      after = [ "hostapd.service" ];
       unitConfig.StopWhenUnneeded = true;
       # NAT the packets if the packet is not going out to our LAN but is from our LAN.
       # ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
