@@ -103,7 +103,11 @@ in {
 
     # Chain of "requires"
     # hostapd -> wifi-relay -> dhcpd4
-    systemd.services.hostapd.requires = [ "wifi-relay.service" ];
+    systemd.services.hostapd = {
+      requires = [ "wifi-relay.service" ];
+      # Don't enable this unit
+      wantedBy = mkForce [ ];
+    };
 
     systemd.services.dhcpd4 = {
       # Don't enable this unit
