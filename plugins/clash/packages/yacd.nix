@@ -1,15 +1,30 @@
-{ stdenv, fetchzip }:
+{ yarn2nix-moretea, fetchFromGitHub }:
 
-stdenv.mkDerivation rec {
+yarn2nix-moretea.mkYarnPackage rec {
   name = "yacd";
 
-  src = builtins.fetchGit {
-    url = "https://github.com/haishanh/yacd.git";
-    ref = "gh-pages";
+  src = fetchFromGitHub {
+    owner = "haishanh";
+    repo = "yacd";
+    rev = "v0.2.1";
+    sha256 = "1scc5lqw79awx01x8knq715g9864ngm2qmy8zmaymnkllv7lrm1g";
   };
 
-  phases = [ "installPhase" ];
-  installPhase = ''
-    cp -r $src $out
+  packageJSON = "${src}/package.json";
+  yarnLock = "${src}/yarn.lock";
+
+  # Since mkYarnPackage moves content of . to ./deps/${pname}, original path should be patched.
+  prePatch = ''
+    substituteInPlace ./src/components/Root.css \
+      --replace '../../node_modules' '../../../../node_modules'
+  '';
+
+  buildPhase = ''
+    yarn build
+  '';
+
+  # installPhase should not be overwritten since it is useful for distPhase.
+  postInstall = ''
+    cp -r $out/libexec/yacd/deps/yacd/public/* $out/bin/
   '';
 }

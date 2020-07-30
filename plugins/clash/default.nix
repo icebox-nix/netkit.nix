@@ -71,7 +71,7 @@ in {
     services.lighttpd = {
       enable = true;
       port = 3000;
-      document-root = "${pkgs.yacd}";
+      document-root = "${pkgs.yacd}/bin";
     };
 
     users.users.${clashUserName} = {
