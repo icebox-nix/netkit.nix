@@ -1,7 +1,12 @@
 {
   description = "Versatile tools for advanced networking scenarios in NixOS.";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  outputs = { self, nixpkgs }: {
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    std.url = "github:icebox-nix/std";
+  };
+
+  outputs = { self, nixpkgs, std }@inputs: {
     overlays = {
       # packages grouped by overlays
       clash = (final: prev: {
@@ -21,8 +26,8 @@
       }).yacd;
     };
     nixosModules = {
-      wifi-relay = (import ./wifi-relay);
-      clash = (import ./clash);
+      wifi-relay = (import ./wifi-relay inputs);
+      clash = (import ./clash inputs);
     };
   };
 }

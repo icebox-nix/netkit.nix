@@ -1,12 +1,13 @@
+inputs:
 { pkgs, config, lib, ... }:
 
 with lib;
 
 let
-  cfg = config.icebox.static.system.wifi-relay;
-  inherit (config.icebox.static.lib.configs) devices;
+  cfg = config.wifi-relay;
+  inherit (inputs.std.nixosModules) devices;
 in {
-  options.icebox.static.system.wifi-relay = {
+  options.wifi-relay = {
     enable = mkOption {
       type = types.bool;
       default = false;

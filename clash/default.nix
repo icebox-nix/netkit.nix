@@ -1,3 +1,4 @@
+inputs:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -5,7 +6,7 @@ with lib;
 let
   inherit (pkgs) gnugrep iptables clash;
   inherit (lib) optionalString mkIf;
-  cfg = config.icebox.static.system.clash;
+  cfg = inputs.self.nixosModules.clash;
   inherit (cfg) clashUserName;
   redirProxyPortStr = toString cfg.redirPort;
 
@@ -21,8 +22,8 @@ let
     }
   '';
 
-  configPath = toString
-    (config.icebox.static.lib.configs.system.dirs.secrets + /clash.yaml);
+  configPath =
+    toString (inputs.std.nixosModules.system.dirs.secrets + /clash.yaml);
   tag = "CLASH_SPEC";
 
   clashModule = types.submodule {
@@ -49,19 +50,14 @@ let
     };
   };
 in {
-  options.icebox.static.system.clash = mkOption {
+  options.clash = mkOption {
     type = clashModule;
     default = { };
     description = "Clash system service related configurations";
   };
 
   config = mkIf (cfg.enable) {
-    icebox.overlays = [
-      (self: super: {
-        maxmind-geoip = (super.callPackage ./packages/maxmind-geoip.nix { });
-        yacd = (super.callPackage ./packages/yacd.nix { });
-      })
-    ];
+    nixpkgs.overlays = [ inputs.self.overlays.clash ];
 
     environment.etc."clash/Country.mmdb".source =
       "${pkgs.maxmind-geoip}/Country.mmdb"; # Bring pre-installed geoip data into directory.
