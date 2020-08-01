@@ -1,1 +1,1 @@
-{ imports = [ ./plugins ]; }
+{ imports = [ ./wifi-relay ./clash ]; }
