@@ -1,4 +1,4 @@
-inputs:
+self:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -6,7 +6,7 @@ with lib;
 let
   inherit (pkgs) gnugrep iptables clash;
   inherit (lib) optionalString mkIf;
-  cfg = inputs.self.nixosModules.clash;
+  cfg = config.clash;
   inherit (cfg) clashUserName;
   redirProxyPortStr = toString cfg.redirPort;
 
@@ -22,8 +22,7 @@ let
     }
   '';
 
-  configPath =
-    toString (inputs.std.nixosModules.system.dirs.secrets + /clash.yaml);
+  configPath = toString (config.std.system.dirs.secrets + /clash.yaml);
   tag = "CLASH_SPEC";
 
   clashModule = types.submodule {
@@ -57,7 +56,7 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [ inputs.self.overlays.clash ];
+    nixpkgs.overlays = [ self.overlays.clash ];
 
     environment.etc."clash/Country.mmdb".source =
       "${pkgs.maxmind-geoip}/Country.mmdb"; # Bring pre-installed geoip data into directory.

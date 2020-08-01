@@ -1,10 +1,9 @@
-inputs:
 { pkgs, config, lib, ... }:
 
 with lib;
 
 let
-  cfg = inputs.self.nixosModules.frpc;
+  cfg = self.nixosModules.frpc;
   frpcConfigFile =
     pkgs.writeText "frpc.ini" (generators.toINI { } cfg.frpcConfig);
 in {

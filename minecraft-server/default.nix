@@ -1,11 +1,10 @@
 # An declarative, systemd-managed, and on-demand management builtin Minecraft Server module, adapted from the one in official repo.
-inputs:
 { config, lib, pkgs, ... }:
 
 with lib;
 
 let
-  cfg = inputs.self.nixosModules.minecraft-server;
+  cfg = config.minecraft-server;
 
   # We don't allow eula=false anyways
   eulaFile = builtins.toFile "eula.txt" ''
