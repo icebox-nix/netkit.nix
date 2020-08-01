@@ -2,7 +2,7 @@
   description = "Versatile tools for advanced networking scenarios in NixOS.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs-channels/nixos-unstable";
     std.url = "github:icebox-nix/std";
   };
 
