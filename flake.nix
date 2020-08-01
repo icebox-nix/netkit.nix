@@ -15,6 +15,7 @@
         yacd = (prev.callPackage ./clash/packages/yacd.nix { });
       });
     };
+
     packages.x86_64-linux = {
       maxmind-geoip = (import nixpkgs {
         system = "x86_64-linux";
@@ -25,9 +26,12 @@
         overlays = [ self.overlays.clash ];
       }).yacd;
     };
+
     nixosModules = {
       wifi-relay = (import ./wifi-relay inputs);
       clash = (import ./clash inputs);
+      frpc = (import ./frpc inputs);
+      minecraft-server = (import ./minecraft-server inputs);
     };
   };
 }
