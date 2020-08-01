@@ -3,7 +3,7 @@
 with lib;
 
 let
-  cfg = self.nixosModules.frpc;
+  cfg = config.frpc;
   frpcConfigFile =
     pkgs.writeText "frpc.ini" (generators.toINI { } cfg.frpcConfig);
 in {
