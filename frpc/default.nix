@@ -3,11 +3,11 @@
 with lib;
 
 let
-  cfg = config.frpc;
+  cfg = config.netkit.frpc;
   frpcConfigFile =
     pkgs.writeText "frpc.ini" (generators.toINI { } cfg.frpcConfig);
 in {
-  options.frpc = {
+  options.netkit.frpc = {
     enable = mkOption {
       type = types.bool;
       default = false;

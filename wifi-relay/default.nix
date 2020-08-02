@@ -3,10 +3,10 @@
 with lib;
 
 let
-  cfg = config.wifi-relay;
+  cfg = config.netkit.wifi-relay;
   inherit (config.std) devices;
 in {
-  options.wifi-relay = {
+  options.netkit.wifi-relay = {
     enable = mkOption {
       type = types.bool;
       default = false;

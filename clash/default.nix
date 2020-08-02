@@ -6,7 +6,7 @@ with lib;
 let
   inherit (pkgs) gnugrep iptables clash;
   inherit (lib) optionalString mkIf;
-  cfg = config.clash;
+  cfg = config.netkit.clash;
   inherit (cfg) clashUserName;
   redirProxyPortStr = toString cfg.redirPort;
 
@@ -49,7 +49,7 @@ let
     };
   };
 in {
-  options.clash = mkOption {
+  options.netkit.clash = mkOption {
     type = clashModule;
     default = { };
     description = "Clash system service related configurations";
