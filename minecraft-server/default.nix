@@ -4,7 +4,7 @@
 with lib;
 
 let
-  cfg = config.minecraft-server;
+  cfg = config.on-demand-minecraft-server;
 
   # We don't allow eula=false anyways
   eulaFile = builtins.toFile "eula.txt" ''
@@ -56,7 +56,7 @@ let
 
 in {
   options = {
-    minecraft-server = {
+    on-demand-minecraft-server = {
 
       enable = mkOption {
         type = types.bool;
