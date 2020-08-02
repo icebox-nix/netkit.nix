@@ -4,7 +4,7 @@
 with lib;
 
 let
-  cfg = config.on-demand-minecraft-server;
+  cfg = config.minecraft-server;
 
   # We don't allow eula=false anyways
   eulaFile = builtins.toFile "eula.txt" ''
@@ -56,7 +56,7 @@ let
 
 in {
   options = {
-    on-demand-minecraft-server = {
+    minecraft-server = {
 
       enable = mkOption {
         type = types.bool;
@@ -337,7 +337,7 @@ in {
         }
       ];
 
-      cfg.serverProperties = {
+      config.minecraft-server.serverProperties = {
         # We want to start the actual server on localhost with default port so our on-demand server management mechanism can work as expected.
         server-ip = "127.0.0.1";
         server-port = 25565;
