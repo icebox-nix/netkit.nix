@@ -28,8 +28,8 @@
     };
 
     nixosModules = {
-      wifi-relay = (import ./wifi-relay);
-      clash = (import ./clash self);
+      wifi-relay = (import ./wifi-relay std);
+      clash = (import ./clash inputs);
       frpc = (import ./frpc);
       minecraft-server = (import ./minecraft-server);
     };

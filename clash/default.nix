@@ -1,4 +1,4 @@
-self:
+inputs:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -49,6 +49,8 @@ let
     };
   };
 in {
+  imports = [ inputs.std.nixosModule ];
+
   options.clash = mkOption {
     type = clashModule;
     default = { };
@@ -56,7 +58,7 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [ self.overlays.clash ];
+    nixpkgs.overlays = [ inputs.self.overlays.clash ];
 
     environment.etc."clash/Country.mmdb".source =
       "${pkgs.maxmind-geoip}/Country.mmdb"; # Bring pre-installed geoip data into directory.
