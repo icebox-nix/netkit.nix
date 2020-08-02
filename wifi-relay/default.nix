@@ -1,4 +1,3 @@
-std:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -7,8 +6,6 @@ let
   cfg = config.wifi-relay;
   inherit (config.std) devices;
 in {
-  imports = [ std.nixosModule ];
-
   options.wifi-relay = {
     enable = mkOption {
       type = types.bool;

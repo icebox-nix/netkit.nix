@@ -18,23 +18,7 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "std": "std"
-      }
-    },
-    "std": {
-      "locked": {
-        "lastModified": 1596365597,
-        "narHash": "sha256-jLcL4FOhJs0/gl4A+BlwjNDwQIhYO6TmOXA0dmto4y0=",
-        "owner": "icebox-nix",
-        "repo": "std",
-        "rev": "1b619910a5cb24d688fef24eb19b572363517d72",
-        "type": "github"
-      },
-      "original": {
-        "owner": "icebox-nix",
-        "repo": "std",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

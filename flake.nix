@@ -1,12 +1,9 @@
 {
   description = "Versatile tools for advanced networking scenarios in NixOS.";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs-channels/nixos-unstable";
-    std.url = "github:icebox-nix/std";
-  };
+  inputs = { nixpkgs.url = "github:NixOS/nixpkgs-channels/nixos-unstable"; };
 
-  outputs = { self, nixpkgs, std }@inputs: {
+  outputs = { self, nixpkgs }@inputs: {
     overlays = {
       # packages grouped by overlays
       clash = (final: prev: {
@@ -28,8 +25,8 @@
     };
 
     nixosModules = {
-      wifi-relay = (import ./wifi-relay std);
-      clash = (import ./clash inputs);
+      wifi-relay = (import ./wifi-relay);
+      clash = (import ./clash self);
       frpc = (import ./frpc);
       minecraft-server = (import ./minecraft-server);
     };
