@@ -113,7 +113,7 @@ in {
         "exec ${clash}/bin/clash -d /etc/clash"; # We don't need to worry about whether /etc/clash is reachable in Live CD or not. Since it would never be execuated inside LiveCD.
 
       # Don't start if the config file doesn't exist.
-      unitConfig = { ConditionPathExists = configPath; };
+      unitConfig = { ConditionPathExists = "/etc/clash/config.yaml"; };
       serviceConfig = {
         # Use prefix `+` to run iptables as root.
         ExecStartPre = "+${preStartScript}";
