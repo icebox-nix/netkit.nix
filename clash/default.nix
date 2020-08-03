@@ -22,7 +22,7 @@ let
     }
   '';
 
-  configPath = toString (config.std.system.dirs.secrets + /clash.yaml);
+  configPath = (config.std.system.dirs.secrets + /clash.yaml);
   tag = "CLASH_SPEC";
 
   clashModule = types.submodule {
@@ -30,7 +30,7 @@ let
       enable = mkOption {
         type = types.bool;
         default = false;
-        # FIXME: Description
+        description = "Enable Clash transparent proxy module.";
       };
 
       clashUserName = mkOption {
