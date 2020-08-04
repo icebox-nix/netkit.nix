@@ -22,7 +22,7 @@ let
     }
   '';
 
-  configPath = (config.std.system.dirs.secrets + /clash.yaml);
+  configPath = config.std.system.dirs.secrets.clash;
   tag = "CLASH_SPEC";
 
   clashModule = types.submodule {
@@ -114,7 +114,7 @@ in {
 
       # Don't start if the config file doesn't exist.
       unitConfig = {
-        # NOTE: We don't use configPath directly because it will be evaluated to a path of source in store.
+        # NOTE: configPath is for the original config which is linked to the following path.
         ConditionPathExists = "/etc/clash/config.yaml";
       };
       serviceConfig = {
