@@ -24,11 +24,11 @@
     },
     "std": {
       "locked": {
-        "lastModified": 1596636085,
-        "narHash": "sha256-L38xNE/5aCbpziXFwjm6T7Mjk7tgsJPxgUNnCmTU+Wk=",
+        "lastModified": 1596640919,
+        "narHash": "sha256-6X/poT27NyD3rp7CW9OHc4qoyAFALUNxgFZfgH/vMCY=",
         "owner": "icebox-nix",
         "repo": "std",
-        "rev": "b75a31482407b7f893bdaa51ae700fe0e354b455",
+        "rev": "7d98cd5eb33975408919a190b0e979f93575f645",
         "type": "github"
       },
       "original": {
