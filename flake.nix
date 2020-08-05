@@ -1,9 +1,13 @@
 {
   description = "Versatile tools for advanced networking scenarios in NixOS.";
 
-  inputs = { nixos.url = "github:NixOS/nixpkgs-channels/nixos-unstable"; };
+  inputs = {
+    nixos.url = "github:NixOS/nixpkgs-channels/nixos-unstable";
+    # We claim std as a dependency but not explicitly use it here.
+    std.url = "github:icebox-nix/std";
+  };
 
-  outputs = { self, nixos }@inputs: {
+  outputs = { self, nixos, std }@inputs: {
     overlays = {
       # packages grouped by overlays
       clash = (final: prev: {
