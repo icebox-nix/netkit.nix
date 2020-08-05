@@ -1,9 +1,9 @@
 {
   description = "Versatile tools for advanced networking scenarios in NixOS.";
 
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs-channels/nixos-unstable"; };
+  inputs = { nixos.url = "github:NixOS/nixpkgs-channels/nixos-unstable"; };
 
-  outputs = { self, nixpkgs }@inputs: {
+  outputs = { self, nixos }@inputs: {
     overlays = {
       # packages grouped by overlays
       clash = (final: prev: {
@@ -14,11 +14,11 @@
     };
 
     packages.x86_64-linux = {
-      maxmind-geoip = (import nixpkgs {
+      maxmind-geoip = (import nixos {
         system = "x86_64-linux";
         overlays = [ self.overlays.clash ];
       }).maxmind-geoip;
-      yacd = (import nixpkgs {
+      yacd = (import nixos {
         system = "x86_64-linux";
         overlays = [ self.overlays.clash ];
       }).yacd;

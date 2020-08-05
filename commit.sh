@@ -3,6 +3,7 @@
 echo -n "Formatting & Checking..."
 find . -type f -name '*.nix' -exec nixfmt {} +
 nix flake check
+nix flake update --recreate-lock-file
 echo "Done."
 
 echo -n "Adding to git..."
