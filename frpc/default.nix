@@ -35,6 +35,8 @@ in {
       serviceConfig = {
         ExecStart = "${pkgs.frp}/bin/frpc -c ${frpcConfigFile}";
         User = "frpc";
+        Restart = "on-failure";
+        RestartSec = 5;
       };
     };
   };
