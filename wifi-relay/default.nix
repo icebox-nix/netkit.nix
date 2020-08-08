@@ -75,7 +75,7 @@ in {
 
     # Hostapd refuses to work properly after resume. Restarting on resume solves this problem.
     powerManagement.resumeCommands =
-      "${config.systemd.package}/bin/systemctl restart hostapd.service";
+      "${config.systemd.package}/bin/systemctl try-restart hostapd.service";
 
     networking.interfaces."wlan-ap0".ipv4.addresses = [{
       address = "192.168.12.1";
