@@ -7,7 +7,7 @@ yarn2nix-moretea.mkYarnPackage rec {
     owner = "haishanh";
     repo = "yacd";
     rev = "v0.2.3";
-    sha256 = "1scc5lqw79awx01x8knq715g9864ngm2qmy8zmaymnkllv7lrm11";
+    sha256 = "10jv2cp6fxsjfm5mvxrxaj5cxxsfynjm7pgzdq81c54hzn74sd43";
   };
 
   packageJSON = "${src}/package.json";
