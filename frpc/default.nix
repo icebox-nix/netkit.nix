@@ -13,6 +13,11 @@ in {
       default = false;
       description = "Enable frp client service";
     };
+    autoStart = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Start frp client service on boot";
+    };
     frpcConfig = mkOption {
       type = with types; attrsOf (attrsOf (oneOf [ bool int str ]));
       description = "frpc.ini config file";
@@ -30,13 +35,15 @@ in {
       description = "frp client service";
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = optional (cfg.autoStart) [ "multi-user.target" ];
 
       serviceConfig = {
         ExecStart = "${pkgs.frp}/bin/frpc -c ${frpcConfigFile}";
         User = "frpc";
         Restart = "on-failure";
         RestartSec = 5;
+        # Disable startlimitburst because we never know when would network come.
+        StartLimitBurst = 0;
       };
     };
   };
