@@ -5,34 +5,36 @@
     nixos.url = "github:NixOS/nixpkgs-channels/nixos-unstable";
     # We claim std as a dependency but not explicitly use it here.
     std.url = "github:icebox-nix/std";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixos, std }@inputs: {
-    overlays = {
-      # packages grouped by overlays
-      clash = (final: prev: {
-        maxmind-geoip =
-          (prev.callPackage ./clash/packages/maxmind-geoip.nix { });
-        yacd = (prev.callPackage ./clash/packages/yacd.nix { });
-      });
-    };
+  outputs = { self, nixos, std, flake-utils }@inputs:
+    let
+      importer = overlays: system:
+        (import nixos {
+          system = system;
+          overlays = overlays;
+        });
+      inherit (nixos.lib.attrsets) recursiveUpdate;
+    in recursiveUpdate (recursiveUpdate {
+      overlays = {
+        # packages grouped by overlays
+        clash = (final: prev: {
+          maxmind-geoip = (prev.callPackage ./clash/pkgs/maxmind-geoip.nix { });
+          yacd = (prev.callPackage ./clash/pkgs/yacd.nix { });
+        });
+      };
 
-    packages.x86_64-linux = {
-      maxmind-geoip = (import nixos {
-        system = "x86_64-linux";
-        overlays = [ self.overlays.clash ];
-      }).maxmind-geoip;
-      yacd = (import nixos {
-        system = "x86_64-linux";
-        overlays = [ self.overlays.clash ];
-      }).yacd;
-    };
-
-    nixosModules = {
-      wifi-relay = (import ./wifi-relay);
-      clash = (import ./clash self);
-      frpc = (import ./frpc);
-      minecraft-server = (import ./minecraft-server);
-    };
-  };
+      nixosModules = {
+        wifi-relay = (import ./wifi-relay);
+        clash = (import ./clash self);
+        frpc = (import ./frpc);
+        minecraft-server = (import ./minecraft-server);
+      };
+    } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
+      packages.yacd = (importer [ self.overlays.clash ] system).yacd;
+    }))) (flake-utils.lib.eachDefaultSystem (system: {
+      packages.maxmind-geoip =
+        (importer [ self.overlays.clash ] system).maxmind-geoip;
+    }));
 }

@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1596290160,
+        "narHash": "sha256-QNXPeCiLKfLH6G6TtyuxZ14Zm+ZMxBaQ0Klccq+2RfM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "0c686c77c4ac6f7add3262107685693ada8ae3b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "nixos": {
       "locked": {
         "lastModified": 1596883819,
@@ -18,6 +33,7 @@
     },
     "root": {
       "inputs": {
+        "flake-utils": "flake-utils",
         "nixos": "nixos",
         "std": "std"
       }
