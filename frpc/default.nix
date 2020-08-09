@@ -35,7 +35,7 @@ in {
       description = "frp client service";
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
-      wantedBy = optional (cfg.autoStart) [ "multi-user.target" ];
+      wantedBy = lists.optionals (cfg.autoStart) [ "multi-user.target" ];
 
       serviceConfig = {
         ExecStart = "${pkgs.frp}/bin/frpc -c ${frpcConfigFile}";
