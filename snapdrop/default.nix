@@ -20,7 +20,7 @@ in {
     };
     port = mkOption {
       type = types.port;
-      default = 80;
+      default = 8080;
       description = "Port for snapdrop server to listen on.";
     };
   };
@@ -63,7 +63,7 @@ in {
           "${src}/client:/usr/share/nginx/html"
           "${./nginx.conf}:/etc/nginx/conf.d/default.conf"
         ];
-        ports = [ "8080:${toString cfg.port}" ];
+        ports = [ "${toString cfg.port}:80" ];
         cmd = [ "nginx" "-g" "daemon off;" ];
         extraOptions = [ "--network=snapdrop" ];
       };
