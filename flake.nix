@@ -23,10 +23,6 @@
           maxmind-geoip = (prev.callPackage ./clash/pkgs/maxmind-geoip.nix { });
           yacd = (prev.callPackage ./clash/pkgs/yacd.nix { });
         });
-        snapdrop = (final: prev: {
-          snapdrop-server-src =
-            (prev.callPackage ./snapdrop/pkgs/snapdrop-server-src.nix { });
-        });
       };
 
       nixosModules = {
@@ -34,12 +30,10 @@
         clash = (import ./clash self);
         frpc = (import ./frpc);
         minecraft-server = (import ./minecraft-server);
-        snapdrop = (import ./snapdrop self);
+        snapdrop = (import ./snapdrop);
       };
     } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
       packages.yacd = (importer [ self.overlays.clash ] system).yacd;
-      packages.snapdrop-server-src =
-        (importer [ self.overlays.snapdrop ] system).snapdrop-server-src;
     }))) (flake-utils.lib.eachDefaultSystem (system: {
       packages.maxmind-geoip =
         (importer [ self.overlays.clash ] system).maxmind-geoip;

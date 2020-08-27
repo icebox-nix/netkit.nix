@@ -1,4 +1,3 @@
-self:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -26,8 +25,6 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [ self.overlays.snapdrop ];
-
     systemd.services.init-snapdrop-docker-network = {
       description = "Create the network bridge snapdrop.";
       after = [ "network.target" ];
@@ -52,7 +49,9 @@ in {
       node = {
         image = "node:lts-alpine";
         user = "root";
-        volumes = [ "${pkgs.snapdrop-server-src}:/home/node/app" ];
+        volumes = [
+          "${(pkgs.callPackage ./pkgs/snapdrop-node.nix { })}:/home/node/app"
+        ];
         workdir = "/home/node/app";
         cmd = [ "node" "index.js" ];
         extraOptions = [ "--network=snapdrop" ];
@@ -68,5 +67,8 @@ in {
         extraOptions = [ "--network=snapdrop" ];
       };
     };
+
+    # node cannot respond to SIGTERM correctly, while it is harmless to turn it down immediately.
+    systemd.services.docker-node.serviceConfig.TimeoutStopSec = lib.mkForce 1;
   };
 }
