@@ -3,7 +3,7 @@ let
   nodeModules = (import ./node.nix {
     inherit pkgs;
     system = stdenv.hostPlatform.system;
-  })."snapdrop-git://github.com/LEXUGE/snapdrop-server.git#42bf1218f7353ba1c46719b8cd9af243e53ea6e8";
+  })."snapdrop-git://github.com/LEXUGE/snapdrop-server.git#76c689558cb3e494add0f33a7848e7efe38ab2a9";
 in stdenv.mkDerivation rec {
   name = "snapdrop-node";
 

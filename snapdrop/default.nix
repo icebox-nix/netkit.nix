@@ -67,8 +67,5 @@ in {
         extraOptions = [ "--network=snapdrop" ];
       };
     };
-
-    # node cannot respond to SIGTERM correctly, while it is harmless to turn it down immediately.
-    systemd.services.docker-node.serviceConfig.TimeoutStopSec = lib.mkForce 1;
   };
 }

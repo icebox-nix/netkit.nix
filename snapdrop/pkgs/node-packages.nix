@@ -15,15 +15,15 @@ let
           "+O8/qh/Qj8CgC6eYBVBykMrNtp5Gebn4dlGD/kKXVkJNDwyrAwSIqwz8CDf+tsAIWVycKcku6gIXJ0qwx/ZXaQ==";
       };
     };
-    "unique-names-generator-4.3.0" = {
+    "unique-names-generator-4.3.1" = {
       name = "unique-names-generator";
       packageName = "unique-names-generator";
-      version = "4.3.0";
+      version = "4.3.1";
       src = fetchurl {
         url =
-          "https://registry.npmjs.org/unique-names-generator/-/unique-names-generator-4.3.0.tgz";
+          "https://registry.npmjs.org/unique-names-generator/-/unique-names-generator-4.3.1.tgz";
         sha512 =
-          "uNX6jVFjBXfZtsc7B8jVPJ3QdfCF/Sjde4gxsy3rNQmHuWGFarnU7IFGdxZKJ4h4uRjANQc6rG7GiGolRW9fgA==";
+          "oxkKrDXbwx6I5M963SdfmMH2t8n1OIfYyzoJ25BmDeETlyWAZjTbMXwIEMiQDex4lkD2pqe+9gxDJQAB2IOfDg==";
       };
     };
     "ws-7.3.1" = {
@@ -38,20 +38,20 @@ let
     };
   };
 in {
-  "snapdrop-git://github.com/LEXUGE/snapdrop-server.git#42bf1218f7353ba1c46719b8cd9af243e53ea6e8" =
+  "snapdrop-git://github.com/LEXUGE/snapdrop-server.git#76c689558cb3e494add0f33a7848e7efe38ab2a9" =
     nodeEnv.buildNodePackage {
       name = "snapdrop";
       packageName = "snapdrop";
       version = "1.0.0";
       src = fetchgit {
         url = "git://github.com/LEXUGE/snapdrop-server.git";
-        rev = "42bf1218f7353ba1c46719b8cd9af243e53ea6e8";
+        rev = "76c689558cb3e494add0f33a7848e7efe38ab2a9";
         sha256 =
-          "3a270065ac4114386f01da6377e579380d1105cdc4b4d4a9211ff4fafc366b7a";
+          "c6a690a73be960c6bae20c3d6e374b1819d6ccaebc186a5570aece1498938bb5";
       };
       dependencies = [
         sources."ua-parser-js-0.7.21"
-        sources."unique-names-generator-4.3.0"
+        sources."unique-names-generator-4.3.1"
         sources."ws-7.3.1"
       ];
       buildInputs = globalBuildInputs;
