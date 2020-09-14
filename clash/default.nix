@@ -22,7 +22,7 @@ let
     }
   '';
 
-  configPath = config.std.system.dirs.secrets.clash;
+  configPath = config.std.interface.system.dirs.secrets.clash;
   tag = "CLASH_SPEC";
 
   clashModule = types.submodule {
@@ -57,6 +57,9 @@ in {
 
   config = mkIf (cfg.enable) {
     nixpkgs.overlays = [ self.overlays.clash ];
+
+    # Sometimes clash doesn't work well on DNS with captive hotspot
+    std.misc.restartOnResumeServices = [ "clash" ];
 
     environment.etc."clash/Country.mmdb".source =
       "${pkgs.maxmind-geoip}/Country.mmdb"; # Bring pre-installed geoip data into directory.

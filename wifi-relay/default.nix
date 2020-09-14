@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.netkit.wifi-relay;
-  inherit (config.std) devices;
+  inherit (config.std.interface) devices;
 in {
   options.netkit.wifi-relay = {
     enable = mkOption {
@@ -74,8 +74,7 @@ in {
     };
 
     # Hostapd refuses to work properly after resume. Restarting on resume solves this problem.
-    powerManagement.resumeCommands =
-      "${config.systemd.package}/bin/systemctl try-restart hostapd.service";
+    std.misc.restartOnResumeServices = [ "hostapd" ];
 
     networking.interfaces."wlan-ap0".ipv4.addresses = [{
       address = "192.168.12.1";
