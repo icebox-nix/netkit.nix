@@ -123,8 +123,7 @@ in {
               enable = mkOption {
                 type = bool;
                 default = false;
-                description =
-                  "Enable Minecraft Server Monitor daemon. You must enable RCON to use it.";
+                description = "Enable Minecraft Server Monitor daemon.";
               };
               idleIfTime = mkOption {
                 type = int;
@@ -325,17 +324,11 @@ in {
       # In other words, restarting anything except the head of this chain would stop the chain completely but not restart it.
       # Conclusion: to manually restart our service, one must restart proxy-minecraft-server.
 
-      assertions = [
-        {
-          assertion = (serverPort != 25565) && (cfg.onDemand.serverIp == null);
-          message =
-            "The `onDemand.serverPort` must not be 25565 if server listens on all addresses.";
-        }
-        {
-          assertion = cfg.serverProperties.enable-rcon;
-          message = "rcon must be enabled for on-demand server management.";
-        }
-      ];
+      assertions = [{
+        assertion = (serverPort != 25565) && (cfg.onDemand.serverIp == null);
+        message =
+          "The `onDemand.serverPort` must not be 25565 if server listens on all addresses.";
+      }];
 
       netkit.minecraft-server.serverProperties = {
         # We want to start the actual server on localhost with default port so our on-demand server management mechanism can work as expected.
@@ -343,7 +336,7 @@ in {
         server-port = 25565;
       };
 
-      # We don't expose rcon and query port because of the PrivateNetwork setting
+      # We don't expose rcon and query port because we are unable to do so due to the PrivateNetwork setting
       networking.firewall = mkIf cfg.openFirewall {
         allowedUDPPorts = [ serverPort ];
         allowedTCPPorts = [ serverPort ];
