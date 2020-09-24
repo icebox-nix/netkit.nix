@@ -4,15 +4,15 @@
 
 let
   sources = {
-    "ua-parser-js-0.7.21" = {
+    "ua-parser-js-0.7.22" = {
       name = "ua-parser-js";
       packageName = "ua-parser-js";
-      version = "0.7.21";
+      version = "0.7.22";
       src = fetchurl {
         url =
-          "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.21.tgz";
+          "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.22.tgz";
         sha512 =
-          "+O8/qh/Qj8CgC6eYBVBykMrNtp5Gebn4dlGD/kKXVkJNDwyrAwSIqwz8CDf+tsAIWVycKcku6gIXJ0qwx/ZXaQ==";
+          "YUxzMjJ5T71w6a8WWVcMGM6YWOTX27rCoIQgLXiWaxqXSx9D7DNjiGWn1aJIRSQ5qr0xuhra77bSIh6voR/46Q==";
       };
     };
     "unique-names-generator-4.3.1" = {
@@ -38,19 +38,19 @@ let
     };
   };
 in {
-  "snapdrop-git://github.com/LEXUGE/snapdrop-server.git#76c689558cb3e494add0f33a7848e7efe38ab2a9" =
+  "snapdrop-git://github.com/LEXUGE/snapdrop-server.git#48d0b997204457657f495ee8112cc9e8c5639e74" =
     nodeEnv.buildNodePackage {
       name = "snapdrop";
       packageName = "snapdrop";
       version = "1.0.0";
       src = fetchgit {
         url = "git://github.com/LEXUGE/snapdrop-server.git";
-        rev = "76c689558cb3e494add0f33a7848e7efe38ab2a9";
+        rev = "48d0b997204457657f495ee8112cc9e8c5639e74";
         sha256 =
-          "c6a690a73be960c6bae20c3d6e374b1819d6ccaebc186a5570aece1498938bb5";
+          "ac41d4cae99950d856aaf398d948deb460f9d5beb554c5ec4686561394502b6a";
       };
       dependencies = [
-        sources."ua-parser-js-0.7.21"
+        sources."ua-parser-js-0.7.22"
         sources."unique-names-generator-4.3.1"
         sources."ws-7.3.1"
       ];

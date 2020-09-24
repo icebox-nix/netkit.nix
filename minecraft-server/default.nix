@@ -319,7 +319,7 @@ in {
 
     (mkIf (cfg.onDemand.enable) {
       # Chain of "requires"
-      # proxy-minecraft-server -> minecraftd -> minecraft-server
+      # proxy-minecraft-server -> minecraft-server
       # This means stopping any of one of them would stop everything on this chain.
       # And, most importantly, after stopping any of them (which means the whole chain stops), starting any of them except the head will not bring it up.
       # In other words, restarting anything except the head of this chain would stop the chain completely but not restart it.
@@ -352,8 +352,10 @@ in {
       systemd.services = {
         # This service serves as a bi-directional relay between the actual server and systemd socket
         proxy-minecraft-server = {
-          requires = [ "minecraftd.service" "proxy-minecraft-server.socket" ];
-          after = [ "minecraftd.service" "proxy-minecraft-server.socket" ];
+          requires =
+            [ "minecraft-server.service" "proxy-minecraft-server.socket" ];
+          after =
+            [ "minecraft-server.service" "proxy-minecraft-server.socket" ];
 
           # Share the same network namespace, so the network traffic could be reacheable.
           unitConfig.JoinsNamespaceOf = "minecraft-server.service";
@@ -362,47 +364,11 @@ in {
             ExecStart =
               "${config.systemd.package}/lib/systemd/systemd-socket-proxyd 127.0.0.1:${
                 toString cfg.serverProperties.server-port
-              } -c ${toString maxPlayers}";
+              } -c ${toString maxPlayers} --exit-idle-time=${
+                toString cfg.onDemand.idleIfTime
+              }";
             PrivateTmp = true;
             PrivateNetwork = true;
-          };
-        };
-
-        minecraftd = let
-          # This script continuously tries to get the number of online players using RCON. If RCON fails to connect or there is at least one player, it would come to another loop, else it exits with 0.
-          execScript = pkgs.writeShellScript "minecraftd" ''
-            while true; do
-              players="$(${pkgs.mcrcon}/bin/mcrcon -H 127.0.0.1 -p ${
-                cfg.serverProperties."rcon.password"
-              } -P ${
-                toString rconPort
-              } list 2>&1 | ${pkgs.gnused}/bin/sed -e 's/ of.*//')"
-              echo "$players"
-              if [[ "$players" == "There are 0" ]]; then
-                echo "No players online currently."
-                exit 0
-              fi
-              echo "There are players online or undetermined."
-              ${pkgs.coreutils}/bin/sleep ${toString cfg.onDemand.idleIfTime}
-            done
-          '';
-        in {
-          description = "Minecraft Server Monitoring daemon";
-          after = [ "network.target" "minecraft-server.service" ];
-          requires = [ "minecraft-server.service" ];
-
-          unitConfig = {
-            StopWhenUnneeded = true;
-            # Share the same network namespace, so the network traffic could be reacheable.
-            JoinsNamespaceOf = "minecraft-server.service";
-          };
-
-          serviceConfig = {
-            ExecStart = execScript;
-            User = "minecraft";
-            # To use JoinsNamespaceOf, we have to set following protection flags.
-            PrivateNetwork = true;
-            PrivateTmp = true;
           };
         };
       };

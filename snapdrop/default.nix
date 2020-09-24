@@ -25,47 +25,56 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    systemd.services.init-snapdrop-docker-network = {
-      description = "Create the network bridge snapdrop.";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-
-      serviceConfig.Type = "oneshot";
-      script =
-        let dockercli = "${config.virtualisation.docker.package}/bin/docker";
-        in ''
-          # Put a true at the end to prevent getting non-zero return code, which will
-          # crash the whole service.
-          check=$(${dockercli} network ls | grep "snapdrop" || true)
-          if [ -z "$check" ]; then
-            ${dockercli} network create snapdrop
-          else
-            echo "snapdrop already exists in docker"
-          fi
-        '';
+    users.users.snapdrop = {
+      description = "Snapdrop server user";
+      isSystemUser = true;
     };
 
-    virtualisation.oci-containers.containers = {
-      node = {
-        image = "node:lts-alpine";
-        user = "root";
-        volumes = [
-          "${(pkgs.callPackage ./pkgs/snapdrop-node.nix { })}:/home/node/app"
-        ];
-        workdir = "/home/node/app";
-        cmd = [ "node" "index.js" ];
-        extraOptions = [ "--network=snapdrop" ];
+    networking.firewall.allowedTCPPorts = [ (cfg.port) 3344 ];
+
+    systemd.services.snapdrop-node = {
+      description = "Backend server for snapdrop";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      script = "${pkgs.nodejs}/bin/node index.js";
+
+      serviceConfig = {
+        WorkingDirectory = "${(pkgs.callPackage ./pkgs/snapdrop-node.nix { })}";
+        User = "snapdrop";
       };
-      nginx = {
-        image = "nginx:alpine";
-        volumes = [
-          "${src}/client:/usr/share/nginx/html"
-          "${./nginx.conf}:/etc/nginx/conf.d/default.conf"
-        ];
-        ports = [ "${toString cfg.port}:80" ];
-        cmd = [ "nginx" "-g" "daemon off;" ];
-        extraOptions = [ "--network=snapdrop" ];
-      };
+    };
+
+    services.nginx = {
+      enable = true;
+      config = ''
+        events {}
+        http {
+          include ${pkgs.nginx}/conf/mime.types;
+          server {
+              listen     ${toString cfg.port};
+
+              expires epoch;
+
+              location / {
+                  root   ${src}/client;
+                  index  index.html index.htm;
+              }
+
+              location /server {
+                  proxy_connect_timeout 300;
+                  proxy_pass http://127.0.0.1:3000;
+                  proxy_set_header Connection "upgrade";
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header X-Forwarded-for $remote_addr;
+              }
+
+              error_page   500 502 503 504  /50x.html;
+              location = /50x.html {
+                  root   ${src}/client;
+              }
+          }
+        }
+      '';
     };
   };
 }
