@@ -3,11 +3,12 @@
 yarn2nix-moretea.mkYarnPackage rec {
   name = "yacd";
 
+  # Use `nix-prefetch-url --unpack https://github.com/haishanh/yacd/archive/{version}.tar.gz` to update
   src = fetchFromGitHub {
     owner = "haishanh";
     repo = "yacd";
-    rev = "v0.2.3";
-    sha256 = "10jv2cp6fxsjfm5mvxrxaj5cxxsfynjm7pgzdq81c54hzn74sd43";
+    rev = "v0.2.7";
+    sha256 = "1l0q2z7fcws1kw492i7qma6dsxh3hyfz9wcxyljw7vd76m9h42vq";
   };
 
   packageJSON = "${src}/package.json";
