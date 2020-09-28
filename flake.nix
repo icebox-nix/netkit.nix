@@ -40,6 +40,7 @@
         frpc = (import ./frpc);
         minecraft-server = (import ./minecraft-server);
         snapdrop = (import ./snapdrop);
+        xmm7360 = (import ./xmm7360 self);
       };
     } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
       packages = ({
