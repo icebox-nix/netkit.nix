@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, kernel }:
+{ stdenv, fetchFromGitHub, kernel, python3 }:
 
 stdenv.mkDerivation rec {
   pname = "xmm7360-pci";
@@ -13,10 +13,18 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = kernel.moduleBuildDependencies;
 
+  prePatch = ''
+    substituteInPlace rpc/open_xdatachannel.py --replace "#!/usr/bin/env python3"  "#!${
+      (python3.withPackages (ps: [ ps.ConfigArgParse ps.pyroute2 ]))
+    }/bin/python3"
+  '';
+
   makeFlags =
     [ "KDIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build" ];
 
   installPhase = ''
+    mkdir -p $out/bin/
     install -D xmm7360.ko $out/lib/modules/${kernel.modDirVersion}/misc/xmm7360.ko
+    cp rpc/* $out/bin/
   '';
 }
