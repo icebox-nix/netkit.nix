@@ -16,6 +16,7 @@
           overlays = overlays;
         });
       inherit (nixos.lib.attrsets) recursiveUpdate;
+      kernelVer = [ "5_8" "5_7" "5_4" "latest" ];
     in recursiveUpdate (recursiveUpdate {
       overlays = {
         # packages grouped by overlays
@@ -23,6 +24,14 @@
           maxmind-geoip = (prev.callPackage ./clash/pkgs/maxmind-geoip.nix { });
           yacd = (prev.callPackage ./clash/pkgs/yacd.nix { });
         });
+
+        xmm7360 = (final: prev:
+          (builtins.listToAttrs (map (v:
+            prev.lib.attrsets.nameValuePair "xmm7360-pci_${v}" ((kernel:
+              (prev.callPackage ./xmm7360/pkgs/xmm7360-pci.nix {
+                inherit kernel;
+                inherit (kernel) stdenv;
+              })) prev.pkgs."linux_${v}")) kernelVer)));
       };
 
       nixosModules = {
@@ -33,7 +42,14 @@
         snapdrop = (import ./snapdrop);
       };
     } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
-      packages.yacd = (importer [ self.overlays.clash ] system).yacd;
+      packages = ({
+        yacd = (importer [ self.overlays.clash ] system).yacd;
+      } //
+        # XMM7360-PCI kernel module packages
+        (builtins.listToAttrs (map (v:
+          nixos.lib.attrsets.nameValuePair "xmm7360-pci_${v}"
+          (importer [ self.overlays.xmm7360 ] system)."xmm7360-pci_${v}")
+          kernelVer)));
     }))) (flake-utils.lib.eachDefaultSystem (system: {
       packages.maxmind-geoip =
         (importer [ self.overlays.clash ] system).maxmind-geoip;
