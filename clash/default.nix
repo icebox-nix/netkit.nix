@@ -46,6 +46,27 @@ let
         description =
           "Proxy local redir server (<literal>ss-redir</literal>) listen port";
       };
+
+      afterUnits = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        description =
+          "List of systemd units that need to be started after clash. Note this is placed in `before` parameter of clash's systemd config.";
+      };
+
+      requireUnits = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        description =
+          "List of systemd units that need to be required by clash.";
+      };
+
+      beforeUnits = mkOption {
+        type = with types; listOf str;
+        default = [ ];
+        description =
+          "List of systemd units that need to be started before clash. Note this is placed in `after` parameter of clash's systemd config.";
+      };
     };
   };
 in {
@@ -59,7 +80,7 @@ in {
     nixpkgs.overlays = [ self.overlays.clash ];
 
     # Sometimes clash doesn't work well on DNS with captive hotspot
-    std.misc.restartOnResumeServices = [ "clash" ];
+    # std.misc.restartOnResumeServices = [ "clash" ];
 
     environment.etc."clash/Country.mmdb".source =
       "${pkgs.maxmind-geoip}/Country.mmdb"; # Bring pre-installed geoip data into directory.
@@ -110,7 +131,9 @@ in {
       '';
     in {
       description = "Clash networking service";
-      after = [ "network.target" ];
+      after = [ "network.target" ] ++ cfg.beforeUnits;
+      before = cfg.afterUnits;
+      requires = cfg.requireUnits;
       wantedBy = [ "multi-user.target" ];
       script =
         "exec ${clash}/bin/clash -d /etc/clash"; # We don't need to worry about whether /etc/clash is reachable in Live CD or not. Since it would never be execuated inside LiveCD.

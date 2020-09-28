@@ -25,6 +25,11 @@
           yacd = (prev.callPackage ./clash/pkgs/yacd.nix { });
         });
 
+        smartdns = (final: prev: {
+          smartdns = (prev.callPackage ./smartdns/pkgs/smartdns.nix { });
+          china-list = (prev.callPackage ./smartdns/pkgs/china-list.nix { });
+        });
+
         xmm7360 = (final: prev:
           (builtins.listToAttrs (map (v:
             prev.lib.attrsets.nameValuePair "xmm7360-pci_${v}" ((kernel:
@@ -41,10 +46,13 @@
         minecraft-server = (import ./minecraft-server);
         snapdrop = (import ./snapdrop);
         xmm7360 = (import ./xmm7360 self);
+        smartdns = (import ./smartdns self);
       };
     } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
       packages = ({
         yacd = (importer [ self.overlays.clash ] system).yacd;
+        smartdns = (importer [ self.overlays.smartdns ] system).smartdns;
+        china-list = (importer [ self.overlays.smartdns ] system).china-list;
       } //
         # XMM7360-PCI kernel module packages
         (builtins.listToAttrs (map (v:
