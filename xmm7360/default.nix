@@ -31,7 +31,7 @@ in {
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     boot.extraModulePackages = [ cfg.package ];
     nixpkgs.overlays = [ self.overlays.xmm7360 ];
 
