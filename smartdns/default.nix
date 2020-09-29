@@ -60,6 +60,13 @@ in {
       nixpkgs.overlays = [ self.overlays.smartdns ];
       services.smartdns.settings.bind = mkDefault ":${toString cfg.bindPort}";
 
+      # SmartDNS doesn't seem to be working when networking environment is changed. Therefore, we have to restart it automatically.
+      networking.networkmanager.dispatcherScripts = [{
+        source = pkgs.writeShellScript "1-smartdns-restart"
+          "${config.systemd.package}/bin/systemctl try-restart smartdns";
+        type = "basic";
+      }];
+
       systemd.packages = [ pkgs.smartdns ];
       systemd.services.smartdns.wantedBy = [ "multi-user.target" ];
       environment.etc."smartdns/smartdns.conf".source = confFile;
