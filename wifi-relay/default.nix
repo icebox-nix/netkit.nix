@@ -102,7 +102,11 @@ in {
 
     # Chain of "requires"
     # hostapd -> wifi-relay -> dhcpd4
-    systemd.services.hostapd.requires = [ "wifi-relay.service" ];
+    systemd.services.hostapd = {
+      requires = [ "wifi-relay.service" ];
+      # Keep trying so that it would start up when we need it (turned on the Wi-Fi). This `RestartSec` setting surpasses the `StartLimitInterval`, so it keeps trying.
+      serviceConfig.RestartSec = "5s";
+    };
 
     systemd.services.dhcpd4 = {
       # Don't enable this unit

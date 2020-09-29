@@ -60,6 +60,7 @@ in {
         # We want to keep it up, else the rules set up are discarded immediately.
         Type = "oneshot";
         RemainAfterExit = true; # Used together with oneshot
+        TimeoutStartSec = "1min 30s"; # Timeout if it can't start and try again
         ExecStopPost = postStopScript;
         ExecStartPre = preStartScript;
         Restart = "on-failure";
