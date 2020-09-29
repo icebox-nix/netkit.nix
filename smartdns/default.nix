@@ -66,6 +66,14 @@ in {
       environment.etc."default/smartdns".source =
         "${pkgs.smartdns}/etc/default/smartdns";
     })
+    (mkIf (config.networking.networkmanager.enable) {
+      # SmartDNS doesn't seem to be working when networking environment is changed. Therefore, we have to restart it automatically.
+      networking.networkmanager.dispatcherScripts = [{
+        source = pkgs.writeShellScript "1-smartdns-restart"
+          "${config.systemd.package}/bin/systemctl try-restart smartdns || true";
+        type = "basic";
+      }];
+    })
     (mkIf (cfg.china-list) {
       netkit.smartdns.settings = {
         conf-file = [
