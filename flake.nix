@@ -3,12 +3,10 @@
 
   inputs = {
     nixos.url = "github:NixOS/nixpkgs-channels/nixos-unstable";
-    # We claim std as a dependency but not explicitly use it here.
-    std.url = "github:icebox-nix/std";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixos, std, flake-utils }@inputs:
+  outputs = { self, nixos, flake-utils }@inputs:
     let
       importer = overlays: system:
         (import nixos {

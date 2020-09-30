@@ -34,23 +34,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixos": "nixos",
-        "std": "std"
-      }
-    },
-    "std": {
-      "locked": {
-        "lastModified": 1601360988,
-        "narHash": "sha256-6aVKO2sbsIyW41kDBRFHyRYcUxVsINCALuPGt/ySlIA=",
-        "owner": "icebox-nix",
-        "repo": "std",
-        "rev": "33c72818bab3bb355c25f878c45c03b10b3751b6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "icebox-nix",
-        "repo": "std",
-        "type": "github"
+        "nixos": "nixos"
       }
     }
   },
