@@ -105,7 +105,7 @@ in {
     systemd.services.hostapd = {
       requires = [ "wifi-relay.service" ];
       # Keep trying so that it would start up when we need it (turned on the Wi-Fi). This `RestartSec` setting surpasses the `StartLimitInterval`, so it keeps trying.
-      serviceConfig.RestartSec = "5s";
+      serviceConfig.RestartSec = "30s";
     };
 
     systemd.services.dhcpd4 = {
