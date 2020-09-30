@@ -65,6 +65,9 @@ in {
       environment.etc."smartdns/smartdns.conf".source = confFile;
       environment.etc."default/smartdns".source =
         "${pkgs.smartdns}/etc/default/smartdns";
+
+      # After resume, smartdns doesn't work as well.
+      std.misc.restartOnResumeServices = [ "smartdns" ];
     })
     (mkIf (config.networking.networkmanager.enable) {
       # SmartDNS doesn't seem to be working when networking environment is changed. Therefore, we have to restart it automatically.
