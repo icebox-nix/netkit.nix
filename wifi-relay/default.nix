@@ -114,6 +114,7 @@ in {
       after = [ "wifi-relay.service" ];
       before = cfg.unitsAfter;
       unitConfig.StopWhenUnneeded = true;
+      serviceConfig.RestartSec = "30s";
     };
 
     systemd.services.wifi-relay = let
@@ -142,6 +143,7 @@ in {
         Type = "oneshot";
         RemainAfterExit = true; # Used together with oneshot
         ExecStopPost = postStopScript;
+        RestartSec = "30s";
       };
     };
   };
