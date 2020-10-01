@@ -2,7 +2,7 @@
   description = "Versatile tools for advanced networking scenarios in NixOS.";
 
   inputs = {
-    nixos.url = "github:NixOS/nixpkgs-channels/nixos-unstable";
+    nixos.url = "github:NixOS/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
