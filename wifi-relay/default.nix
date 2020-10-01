@@ -101,10 +101,12 @@ in {
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1; # Enable package forwarding.
 
     # Chain of "requires"
+    # This ensures no blocking on the chain. If anything fails or restarts, everything restarts in right order.
     # hostapd -> wifi-relay -> dhcpd4
     systemd.services.hostapd = {
       requires = [ "wifi-relay.service" ];
       # Keep trying so that it would start up when we need it (turned on the Wi-Fi). This `RestartSec` setting surpasses the `StartLimitInterval`, so it keeps trying.
+      unitConfig.PartOf = [ "wifi-relay.service" "dhcpd4.service" ];
       serviceConfig.RestartSec = "30s";
     };
 
@@ -113,8 +115,12 @@ in {
       wantedBy = mkForce [ ];
       after = [ "wifi-relay.service" ];
       before = cfg.unitsAfter;
-      unitConfig.StopWhenUnneeded = true;
-      serviceConfig.RestartSec = "30s";
+      unitConfig = {
+        StopWhenUnneeded = true;
+        PartOf = [ "hostapd.service" "wifi-relay.service" ];
+      };
+      # Start with the whole chain together, but not on its own.
+      serviceConfig.Restart = mkForce "no";
     };
 
     systemd.services.wifi-relay = let
@@ -126,7 +132,10 @@ in {
       description = "iptables rules for wifi-relay";
       requires = [ "dhcpd4.service" ];
       after = [ "hostapd.service" ];
-      unitConfig.StopWhenUnneeded = true;
+      unitConfig = {
+        StopWhenUnneeded = true;
+        PartOf = [ "hostapd.service" "dhcpd4.service" ];
+      };
       # NAT the packets if the packet is not going out to our LAN but is from our LAN.
       # ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
       # Accept the packets from wlan-ap0 to forward them to the outer world
@@ -143,7 +152,6 @@ in {
         Type = "oneshot";
         RemainAfterExit = true; # Used together with oneshot
         ExecStopPost = postStopScript;
-        RestartSec = "30s";
       };
     };
   };
