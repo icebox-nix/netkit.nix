@@ -43,16 +43,18 @@ in {
       description =
         "List of systemd units should be start after LAN Network is reacheable.";
     };
+
+    autoStart = mkOption {
+      default = false;
+      type = types.bool;
+      description = "Weather start hostapd on startup.";
+    };
   };
 
   config = mkIf (cfg.enable) {
     # "wlan-station0" is for wifi-client managed by network manager, "wlan-ap0" is for hostap
     networking.wlanInterfaces = {
       "wlan-station0" = { device = cfg.interface; };
-      "wlan-ap0" = {
-        device = cfg.interface;
-        mac = "08:11:96:0e:08:0a";
-      };
     };
 
     networking.networkmanager.unmanaged =
@@ -76,11 +78,6 @@ in {
     # Hostapd refuses to work properly after resume. Restarting on resume solves this problem.
     std.misc.restartOnResumeServices = [ "hostapd" ];
 
-    networking.interfaces."wlan-ap0".ipv4.addresses = [{
-      address = "192.168.12.1";
-      prefixLength = 24;
-    }];
-
     services.dhcpd4 = {
       enable = true;
       interfaces = [ "wlan-ap0" ];
@@ -103,11 +100,32 @@ in {
     # Chain of "requires"
     # This ensures no blocking on the chain. If anything fails or restarts, everything restarts in right order.
     # hostapd -> wifi-relay -> dhcpd4
-    systemd.services.hostapd = {
+    systemd.services.hostapd = let
+      preStartScript = pkgs.writeShellScript "hostapd-prestart" ''
+        ${pkgs.iw}/bin/iw phy ${cfg.interface} interface add wlan-ap0 type managed addr 08:11:96:0e:08:0a
+        ${pkgs.iproute}/bin/ip link set wlan-ap0 up
+        ${pkgs.iproute}/bin/ip addr add 192.168.12.1/24 dev wlan-ap0
+      '';
+      postStopScript = pkgs.writeShellScript "hostapd-poststop" ''
+        ${pkgs.iproute}/bin/ip addr flush dev wlan-ap0 || true
+        ${pkgs.iproute}/bin/ip link set wlan-ap0 down || true
+        ${pkgs.iw}/bin/iw dev wlan-ap0 del || true
+      '';
+    in {
+      # Clear all of the dependencies
+      wantedBy = mkForce [ ];
+      after = mkForce [ ];
+      bindsTo = mkForce [ ];
+      requiredBy = mkForce [ ];
+
       requires = [ "wifi-relay.service" ];
       # Keep trying so that it would start up when we need it (turned on the Wi-Fi). This `RestartSec` setting surpasses the `StartLimitInterval`, so it keeps trying.
       unitConfig.PartOf = [ "wifi-relay.service" "dhcpd4.service" ];
-      serviceConfig.RestartSec = "30s";
+      serviceConfig = {
+        RestartSec = "30s";
+        ExecStartPre = preStartScript;
+        ExecStopPost = postStopScript;
+      };
     };
 
     systemd.services.dhcpd4 = {
