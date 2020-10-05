@@ -6,7 +6,7 @@ with lib;
 let
   cfg = config.netkit.xmm7360;
   xmm7360ConfigFile =
-    pkgs.writeText "xmm7360.ini" (generators.toINI { } cfg.config);
+    pkgs.writeText "xmm7360.ini" (generators.toKeyValue { } cfg.config);
 in {
   options.netkit.xmm7360 = {
     enable = mkOption {
@@ -20,9 +20,8 @@ in {
       description = "Start the service on startup.";
     };
     config = mkOption {
-      type = with types; attrsOf (attrsOf (oneOf [ bool int str ]));
-      description =
-        "xmm7360.ini config file (section names are treated as comments).";
+      type = with types; attrsOf (oneOf [ bool int str ]);
+      description = "xmm7360.ini config file (no section names required).";
       default = { };
     };
     package = mkOption {

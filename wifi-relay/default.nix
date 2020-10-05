@@ -5,6 +5,30 @@ with lib;
 let
   cfg = config.netkit.wifi-relay;
   inherit (config.std.interface) devices;
+
+  hostapdConfigFile = pkgs.writeText "hostapd.conf" (generators.toKeyValue { } {
+    interface = cfg.interface;
+    driver = "nl80211";
+    ssid = cfg.ssid;
+    hw_mode = "g";
+    channel = 7;
+    # logging (debug level)
+    logger_syslog = -1;
+    logger_syslog_level = 2;
+    logger_stdout = -1;
+    logger_stdout_level = 2;
+
+    ctrl_interface = "/run/hostapd";
+    ctrl_interface_group = "wheel";
+
+    wpa = 3;
+    wpa_passphrase = cfg.passphrase;
+
+    # 1=wpa, 2=wep, 3=both
+    auth_algs = 1;
+    wpa_key_mgmt = "WPA-PSK";
+    rsn_pairwise = "CCMP";
+  });
 in {
   options.netkit.wifi-relay = {
     enable = mkOption {
@@ -60,24 +84,46 @@ in {
     networking.networkmanager.unmanaged =
       [ "interface-name:${cfg.interface}" "interface-name:wlan-ap0" ];
 
-    services.hostapd = {
-      enable = true;
-      interface = "wlan-ap0";
-      hwMode = "g";
-      wpa = true;
-      ssid = cfg.ssid;
-      wpaPassphrase = cfg.passphrase;
-      extraConfig = ''
-        # 1=wpa, 2=wep, 3=both
-        auth_algs=1
-        wpa_key_mgmt=WPA-PSK
-        rsn_pairwise=CCMP
-      '';
-    };
+    networking.firewall.allowedUDPPorts = [ 53 67 ]; # DNS & DHCP
+    services.haveged.enable =
+      true; # Sometimes slow connection speeds are attributed to absence of haveged.
 
+    boot.kernel.sysctl."net.ipv4.ip_forward" = 1; # Enable package forwarding.
+
+    # Chain of "requires"
+    # This ensures no blocking on the chain. If anything fails or restarts, everything restarts in right order.
+    # hostapd -> wifi-relay -> dhcpd4
+
+    # SECTION: HOSTAPD
     # Hostapd refuses to work properly after resume. Restarting on resume solves this problem.
     std.misc.restartOnResumeServices = [ "hostapd" ];
+    environment.systemPackages = [ pkgs.hostapd ];
 
+    systemd.services.hostapd = let
+      preStartScript = pkgs.writeShellScript "hostapd-prestart" ''
+        ${pkgs.iw}/bin/iw phy ${cfg.interface} interface add wlan-ap0 type managed addr 08:11:96:0e:08:0a
+        ${pkgs.iproute}/bin/ip link set wlan-ap0 up
+        ${pkgs.iproute}/bin/ip addr add 192.168.12.1/24 dev wlan-ap0
+      '';
+      postStopScript = pkgs.writeShellScript "hostapd-poststop" ''
+        ${pkgs.iproute}/bin/ip addr flush dev wlan-ap0 || true
+        ${pkgs.iproute}/bin/ip link set wlan-ap0 down || true
+        ${pkgs.iw}/bin/iw dev wlan-ap0 del || true
+      '';
+    in {
+      wantedBy = optionals (cfg.autoStart) ([ "multi-user.target" ]);
+      requires = [ "wifi-relay.service" ];
+      script = "${pkgs.hostapd}/bin/hostapd ${hostapdConfigFile}";
+      unitConfig.PartOf = [ "wifi-relay.service" "dhcpd4.service" ];
+      serviceConfig = {
+        # Keep trying so that it would start up when we need it (turned on the Wi-Fi). This `RestartSec` setting surpasses the `StartLimitInterval`, so it keeps trying.
+        RestartSec = "30s";
+        ExecStartPre = preStartScript;
+        ExecStopPost = postStopScript;
+      };
+    };
+
+    # SECTION: DHCPD
     services.dhcpd4 = {
       enable = true;
       interfaces = [ "wlan-ap0" ];
@@ -91,42 +137,6 @@ in {
         }
       '';
     };
-    networking.firewall.allowedUDPPorts = [ 53 67 ]; # DNS & DHCP
-    services.haveged.enable =
-      true; # Sometimes slow connection speeds are attributed to absence of haveged.
-
-    boot.kernel.sysctl."net.ipv4.ip_forward" = 1; # Enable package forwarding.
-
-    # Chain of "requires"
-    # This ensures no blocking on the chain. If anything fails or restarts, everything restarts in right order.
-    # hostapd -> wifi-relay -> dhcpd4
-    systemd.services.hostapd = let
-      preStartScript = pkgs.writeShellScript "hostapd-prestart" ''
-        ${pkgs.iw}/bin/iw phy ${cfg.interface} interface add wlan-ap0 type managed addr 08:11:96:0e:08:0a
-        ${pkgs.iproute}/bin/ip link set wlan-ap0 up
-        ${pkgs.iproute}/bin/ip addr add 192.168.12.1/24 dev wlan-ap0
-      '';
-      postStopScript = pkgs.writeShellScript "hostapd-poststop" ''
-        ${pkgs.iproute}/bin/ip addr flush dev wlan-ap0 || true
-        ${pkgs.iproute}/bin/ip link set wlan-ap0 down || true
-        ${pkgs.iw}/bin/iw dev wlan-ap0 del || true
-      '';
-    in {
-      # Clear all of the dependencies
-      wantedBy = mkForce [ ];
-      after = mkForce [ ];
-      bindsTo = mkForce [ ];
-      requiredBy = mkForce [ ];
-
-      requires = [ "wifi-relay.service" ];
-      # Keep trying so that it would start up when we need it (turned on the Wi-Fi). This `RestartSec` setting surpasses the `StartLimitInterval`, so it keeps trying.
-      unitConfig.PartOf = [ "wifi-relay.service" "dhcpd4.service" ];
-      serviceConfig = {
-        RestartSec = "30s";
-        ExecStartPre = preStartScript;
-        ExecStopPost = postStopScript;
-      };
-    };
 
     systemd.services.dhcpd4 = {
       # Don't enable this unit
@@ -138,6 +148,7 @@ in {
       serviceConfig.Restart = mkForce "no";
     };
 
+    # SECTION: WIFI-RELAY
     systemd.services.wifi-relay = let
       inherit (pkgs) iptables gnugrep;
       postStopScript = pkgs.writeShellScript "wifi-relay-poststop" ''
