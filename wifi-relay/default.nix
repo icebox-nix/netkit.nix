@@ -21,7 +21,7 @@ let
     ctrl_interface = "/run/hostapd";
     ctrl_interface_group = "wheel";
 
-    wpa = 3;
+    wpa = 2;
     wpa_passphrase = cfg.passphrase;
 
     # 1=wpa, 2=wep, 3=both
