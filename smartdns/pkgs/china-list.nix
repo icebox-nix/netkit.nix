@@ -7,8 +7,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "felixonmars";
     repo = "dnsmasq-china-list";
-    rev = "cf1d61e80ebdbe9ae4249f087c7add9d4ea28121";
-    sha256 = "0066lz8vzza4rqki2gln1wapsmvixf6m6lr8d42h5hmf03qkyifs";
+    rev = "8b91f53b703cb250213a604d6f84c199bcbada74";
+    sha256 = "027ncbaiigq3jjjak973bd3j7n64xz8agzlzamg5n1vdgfkc1bbq";
   };
 
   makeFlags = [ "smartdns" "SERVER=china" ];

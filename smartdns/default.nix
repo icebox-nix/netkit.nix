@@ -4,7 +4,7 @@ self:
 with lib;
 
 let
-  inherit (lib.types) attrsOf coercedTo listOf oneOf str int bool nullOr;
+  inherit (lib.types) attrsOf coercedTo listOf oneOf str int bool;
   cfg = config.netkit.smartdns;
 
   confFile = pkgs.writeText "smartdns.conf" (with generators;
