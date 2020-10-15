@@ -4,7 +4,7 @@ self:
 with lib;
 
 let
-  inherit (lib.types) attrsOf coercedTo listOf oneOf str int bool;
+  inherit (lib.types) attrsOf coercedTo listOf oneOf str int bool nullOr;
   cfg = config.netkit.smartdns;
 
   confFile = pkgs.writeText "smartdns.conf" (with generators;
@@ -69,6 +69,7 @@ in {
       # After resume, smartdns doesn't work as well.
       std.misc.restartOnResumeServices = [ "smartdns" ];
     })
+
     (mkIf (config.networking.networkmanager.enable) {
       # SmartDNS doesn't seem to be working when networking environment is changed. Therefore, we have to restart it automatically.
       networking.networkmanager.dispatcherScripts = [{
@@ -77,6 +78,7 @@ in {
         type = "basic";
       }];
     })
+
     (mkIf (cfg.china-list) {
       netkit.smartdns.settings = {
         conf-file = [
