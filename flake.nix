@@ -38,6 +38,7 @@
       packages = ({
         yacd = (importer [ self.overlay ] system).yacd;
         smartdns = (importer [ self.overlay ] system).smartdns;
+        atomdns = (importer [ self.overlay ] system).atomdns;
       } //
         # XMM7360-PCI kernel module packages
         (builtins.listToAttrs (map (v:

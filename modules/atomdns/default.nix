@@ -33,8 +33,7 @@ in {
       script = "${pkgs.atomdns}/bin/atomdns ${confFile}";
       serviceConfig = {
         # CAP_NET_BIND_SERVICE: Bind arbitary ports by unprivileged user.
-        AmbientCapabilities =
-          "CAP_NET_BIND_SERVICE"; # We want additional capability upon an unprivileged user.
+        AmbientCapabilities = "CAP_NET_BIND_SERVICE";
         User = "atomdns";
         Restart = "on-failure";
       };
