@@ -1,3 +1,4 @@
+self:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -25,6 +26,8 @@ in {
   };
 
   config = mkIf (cfg.enable) {
+    nixpkgs.overlays = [ self.overlays.tools ];
+
     users.users.snapdrop = {
       description = "Snapdrop server user";
       isSystemUser = true;
@@ -39,7 +42,7 @@ in {
       script = "${pkgs.nodejs}/bin/node index.js";
 
       serviceConfig = {
-        WorkingDirectory = "${(pkgs.callPackage ./pkgs/snapdrop-node.nix { })}";
+        WorkingDirectory = "${pkgs.snapdrop}";
         User = "snapdrop";
       };
     };

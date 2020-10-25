@@ -14,51 +14,41 @@
           overlays = overlays;
         });
       inherit (nixos.lib.attrsets) recursiveUpdate;
-      kernelVer = [ "5_8" "5_7" "5_4" "latest" ];
+      kernelVer = [ "5_8" "5_4" "latest" ];
     in recursiveUpdate (recursiveUpdate {
+      overlay = (final: prev: (import ./pkgs { inherit kernelVer prev; }));
       overlays = {
-        # packages grouped by overlays
-        clash = (final: prev: {
-          maxmind-geoip = (prev.callPackage ./clash/pkgs/maxmind-geoip.nix { });
-          yacd = (prev.callPackage ./clash/pkgs/yacd.nix { });
-        });
-
-        smartdns = (final: prev: {
-          smartdns = (prev.callPackage ./smartdns/pkgs/smartdns.nix { });
-          china-list = (prev.callPackage ./smartdns/pkgs/china-list.nix { });
-        });
-
-        xmm7360 = (final: prev:
-          (builtins.listToAttrs (map (v:
-            prev.lib.attrsets.nameValuePair "xmm7360-pci_${v}" ((kernel:
-              (prev.callPackage ./xmm7360/pkgs/xmm7360-pci.nix {
-                inherit kernel;
-                inherit (kernel) stdenv;
-              })) prev.pkgs."linux_${v}")) kernelVer)));
+        tools = (final: prev: (import ./pkgs/tools prev));
+        data = (final: prev: (import ./pkgs/data prev));
+        drivers =
+          (final: prev: (import ./pkgs/drivers { inherit kernelVer prev; }));
       };
 
       nixosModules = {
-        wifi-relay = (import ./wifi-relay);
-        clash = (import ./clash self);
-        frpc = (import ./frpc);
-        minecraft-server = (import ./minecraft-server);
-        snapdrop = (import ./snapdrop);
-        xmm7360 = (import ./xmm7360 self);
-        smartdns = (import ./smartdns self);
+        wifi-relay = (import ./modules/wifi-relay);
+        clash = (import ./modules/clash self);
+        frpc = (import ./modules/frpc);
+        minecraft-server = (import ./modules/minecraft-server);
+        snapdrop = (import ./modules/snapdrop self);
+        xmm7360 = (import ./modules/xmm7360 self);
+        smartdns = (import ./modules/smartdns self);
+        atomdns = (import ./modules/atomdns self);
       };
     } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
       packages = ({
-        yacd = (importer [ self.overlays.clash ] system).yacd;
-        smartdns = (importer [ self.overlays.smartdns ] system).smartdns;
-        china-list = (importer [ self.overlays.smartdns ] system).china-list;
+        yacd = (importer [ self.overlay ] system).yacd;
+        smartdns = (importer [ self.overlay ] system).smartdns;
       } //
         # XMM7360-PCI kernel module packages
         (builtins.listToAttrs (map (v:
           nixos.lib.attrsets.nameValuePair "xmm7360-pci_${v}"
-          (importer [ self.overlays.xmm7360 ] system)."xmm7360-pci_${v}")
-          kernelVer)));
+          (importer [ self.overlay ] system)."xmm7360-pci_${v}") kernelVer)));
     }))) (flake-utils.lib.eachDefaultSystem (system: {
-      packages.maxmind-geoip =
-        (importer [ self.overlays.clash ] system).maxmind-geoip;
+      packages = {
+        maxmind-geoip = (importer [ self.overlay ] system).maxmind-geoip;
+        chinalist-raw = (importer [ self.overlay ] system).chinalist-raw;
+        chinalist-smartdns =
+          (importer [ self.overlay ] system).chinalist-smartdns;
+      };
     }));
 }

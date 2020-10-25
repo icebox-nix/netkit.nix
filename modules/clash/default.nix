@@ -77,7 +77,7 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [ self.overlays.clash ];
+    nixpkgs.overlays = [ self.overlays.tools self.overlays.data ];
 
     # Sometimes clash doesn't work well on DNS with captive hotspot
     # std.misc.restartOnResumeServices = [ "clash" ];

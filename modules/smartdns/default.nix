@@ -57,7 +57,6 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     ({
-      nixpkgs.overlays = [ self.overlays.smartdns ];
       services.smartdns.settings.bind = mkDefault ":${toString cfg.bindPort}";
 
       systemd.packages = [ pkgs.smartdns ];
@@ -80,11 +79,12 @@ in {
     })
 
     (mkIf (cfg.china-list) {
+      nixpkgs.overlays = [ self.overlays.data ];
       netkit.smartdns.settings = {
         conf-file = [
-          "${pkgs.china-list}/accelerated-domains.china.smartdns.conf"
-          "${pkgs.china-list}/apple.china.smartdns.conf"
-          "${pkgs.china-list}/google.china.smartdns.conf"
+          "${pkgs.chinalist-smartdns}/accelerated-domains.china.smartdns.conf"
+          "${pkgs.chinalist-smartdns}/apple.china.smartdns.conf"
+          "${pkgs.chinalist-smartdns}/google.china.smartdns.conf"
         ];
       };
     })
