@@ -4,16 +4,17 @@ self:
 with lib;
 
 let
-  cfg = config.netkit.atomdns;
-  confFile = pkgs.writeText "atomdns.hcl" cfg.settings;
+  cfg = config.netkit.overture;
+  confFile =
+    pkgs.writeText "overture-config.json" (generators.toJSON { } cfg.settings);
 in {
-  options.netkit.atomdns = {
+  options.netkit.overture = {
     enable = mkEnableOption "AtomDNS DNS server";
 
     settings = mkOption {
-      type = types.str;
+      type = types.unspecified;
       description = ''
-        Configuration file in HCL2 format. See <link xlink:href="https://github.com/Xuanwo/atomdns">AtomDNS README</link> for details.
+        Configuration file in JSON. See <link xlink:href="https://github.com/shawn1m/overture">Overture DNS README</link> for details.
       '';
     };
   };
@@ -21,20 +22,20 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [ self.overlays.tools ];
 
-    users.users.atomdns = {
-      description = "atomdns user";
+    users.users.overture = {
+      description = "overture user";
       isSystemUser = true;
     };
 
-    systemd.services.atomdns = {
-      description = "AtomDNS service";
+    systemd.services.overture = {
+      description = "Overture DNS service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script = "${pkgs.atomdns}/bin/atomdns ${confFile}";
+      script = "${pkgs.overture}/bin/overture -v -c ${confFile}";
       serviceConfig = {
         # CAP_NET_BIND_SERVICE: Bind arbitary ports by unprivileged user.
         AmbientCapabilities = "CAP_NET_BIND_SERVICE";
-        User = "atomdns";
+        User = "overture";
         Restart = "on-failure";
       };
     };

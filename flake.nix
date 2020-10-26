@@ -33,12 +33,14 @@
         xmm7360 = (import ./modules/xmm7360 self);
         smartdns = (import ./modules/smartdns self);
         atomdns = (import ./modules/atomdns self);
+        overture = (import ./modules/overture self);
       };
     } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
       packages = ({
         yacd = (importer [ self.overlay ] system).yacd;
         smartdns = (importer [ self.overlay ] system).smartdns;
         atomdns = (importer [ self.overlay ] system).atomdns;
+        overture = (importer [ self.overlay ] system).overture;
       } //
         # XMM7360-PCI kernel module packages
         (builtins.listToAttrs (map (v:
