@@ -11,12 +11,12 @@ stdenv.mkDerivation rec {
     sha256 = "027ncbaiigq3jjjak973bd3j7n64xz8agzlzamg5n1vdgfkc1bbq";
   };
 
+  patches = [ ./overture.patch ];
+
   makeFlags = [ format "SERVER=${server}" ];
 
   installPhase = ''
     mkdir $out
-    cp ./accelerated-domains*${format}* $out
-    cp ./google*${format}* $out
-    cp ./apple*${format}* $out
+    cp ./*${format}* $out
   '';
 }

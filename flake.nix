@@ -50,6 +50,8 @@
       packages = {
         maxmind-geoip = (importer [ self.overlay ] system).maxmind-geoip;
         chinalist-raw = (importer [ self.overlay ] system).chinalist-raw;
+        chinalist-overture =
+          (importer [ self.overlay ] system).chinalist-overture;
         chinalist-smartdns =
           (importer [ self.overlay ] system).chinalist-smartdns;
       };
