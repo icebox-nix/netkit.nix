@@ -1,11 +1,12 @@
 --- Makefile	2020-10-26 14:47:53.261593618 +0800
-+++ ./Makefile	2020-10-27 14:33:41.569907715 +0800
-@@ -59,5 +59,8 @@
++++ ./Makefile	2020-10-27 20:42:12.858096243 +0800
+@@ -59,5 +59,9 @@
  	sed -i 's/\r*$$/\r/' accelerated-domains.china.adguardhome.conf google.china.adguardhome.conf apple.china.adguardhome.conf
  endif
  
 +overture: raw
-+	sed -e 's|\.|\\.|g' -e 's|\(.*\)|^([A-Za-z.]+\\.)*\1|' accelerated-domains.china.raw.txt google.china.raw.txt apple.china.raw.txt > overture-regex-rules.txt
++	sed -e 's|\.|\\.|g' -e 's|\(.*\)|\\.\1$$|' accelerated-domains.china.raw.txt google.china.raw.txt apple.china.raw.txt > overture-regex-rules.txt
++	sed -e 's|\.|\\.|g' -e 's|\(.*\)|^\1$$|' accelerated-domains.china.raw.txt google.china.raw.txt apple.china.raw.txt >> overture-regex-rules.txt
 +
  clean:
  	rm -f {accelerated-domains,google,apple}.china.*.conf {accelerated-domains,google,apple}.china.raw.txt dnscrypt-proxy-forwarding-rules.txt
