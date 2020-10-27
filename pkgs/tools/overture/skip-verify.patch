@@ -1,0 +1,13 @@
+diff --git a/core/outbound/clients/resolver/tcptls_resolver.go b/core/outbound/clients/resolver/tcptls_resolver.go
+index f4645b2..7c5058c 100644
+--- a/core/outbound/clients/resolver/tcptls_resolver.go
++++ b/core/outbound/clients/resolver/tcptls_resolver.go
+@@ -38,7 +38,7 @@ func (r *TCPTLSResolver) createTlsConn() (conn net.Conn, err error) {
+ 		return nil, err
+ 	}
+ 	conf := &tls.Config{
+-		InsecureSkipVerify: false,
++		InsecureSkipVerify: true,
+ 		ServerName:         host,
+ 	}
+ 	conn = tls.Client(conn, conf)

@@ -1,0 +1,16 @@
+diff --git a/core/matcher/mix/list.go b/core/matcher/mix/list.go
+index 35a6203..2e50ee2 100644
+--- a/core/matcher/mix/list.go
++++ b/core/matcher/mix/list.go
+@@ -47,7 +47,10 @@ func (s *List) Has(str string) bool {
+ 		switch data.Type {
+ 		case "domain":
+ 			idx := len(str) - len(data.Content)
+-			if idx > 0 && data.Content == str[idx:] {
++			if idx >= 0 && data.Content == str[idx:] {
++			        if idx >=1 && (string([]rune(str)[idx-1]) == ".") {
++				   return false
++				}
+ 				return true
+ 			}
+ 		case "regex":

@@ -11,10 +11,7 @@ buildGoModule rec {
     sha256 = "1vwm5x653864dkhypwc0zdi6ziqawf9iv74i8svvqbf9j5hnywb9";
   };
 
-  postPatch = if skipVerify then ''
-    substituteInPlace ./core/outbound/clients/resolver/tcptls_resolver.go --replace "InsecureSkipVerify: false," "InsecureSkipVerify: true,"
-  '' else
-    "";
+  patches = [ ./mix-domain.patch ];
 
   buildFlagsArray = [ "-ldflags=" "-w" "-s" "-X main.version=${version}" ];
 
