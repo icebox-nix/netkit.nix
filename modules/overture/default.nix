@@ -36,8 +36,9 @@ in {
       description = "Overture DNS service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script =
-        "${pkgs.overture}/bin/overture -v -c ${confFile} -p ${cfg.processors}";
+      script = "${pkgs.overture}/bin/overture -v -c ${confFile} -p ${
+          toString cfg.processors
+        }";
       serviceConfig = {
         # CAP_NET_BIND_SERVICE: Bind arbitary ports by unprivileged user.
         AmbientCapabilities = "CAP_NET_BIND_SERVICE";
