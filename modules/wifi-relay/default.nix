@@ -117,6 +117,7 @@ in {
       unitConfig.PartOf = [ "wifi-relay.service" "dhcpd4.service" ];
       serviceConfig = {
         # Keep trying so that it would start up when we need it (turned on the Wi-Fi). This `RestartSec` setting surpasses the `StartLimitInterval`, so it keeps trying.
+        Restart = "on-failure";
         RestartSec = "30s";
         ExecStartPre = preStartScript;
         ExecStopPost = postStopScript;
