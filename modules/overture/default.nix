@@ -11,6 +11,11 @@ in {
   options.netkit.overture = {
     enable = mkEnableOption "AtomDNS DNS server";
 
+    processors = mkOption {
+      type = types.int;
+      description = "Number of processors to use.";
+    };
+
     settings = mkOption {
       type = types.unspecified;
       description = ''
@@ -31,7 +36,8 @@ in {
       description = "Overture DNS service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script = "${pkgs.overture}/bin/overture -v -c ${confFile}";
+      script =
+        "${pkgs.overture}/bin/overture -v -c ${confFile} -p ${cfg.processors}";
       serviceConfig = {
         # CAP_NET_BIND_SERVICE: Bind arbitary ports by unprivileged user.
         AmbientCapabilities = "CAP_NET_BIND_SERVICE";
