@@ -11,7 +11,11 @@ buildGoModule rec {
     sha256 = "1vwm5x653864dkhypwc0zdi6ziqawf9iv74i8svvqbf9j5hnywb9";
   };
 
-  patches = [ ./mix-domain.patch ];
+  patches = if skipVerify then [
+    ./mix-domain.patch
+    ./skip-verify.patch
+  ] else
+    [ ./mix-domain.patch ];
 
   buildFlagsArray = [ "-ldflags=" "-w" "-s" "-X main.version=${version}" ];
 
