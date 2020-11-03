@@ -4,11 +4,11 @@ self:
 with lib;
 
 let
-  cfg = config.netkit.overture;
+  cfg = config.netkit.dcompass;
   confFile =
     pkgs.writeText "dcompass-config.json" (generators.toJSON { } cfg.settings);
 in {
-  options.netkit.overture = {
+  options.netkit.dcompass = {
     enable = mkEnableOption "Dcompass DNS server";
 
     settings = mkOption {
@@ -27,7 +27,7 @@ in {
       isSystemUser = true;
     };
 
-    systemd.services.overture = {
+    systemd.services.dcompass = {
       description = "Dcompass DNS service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
