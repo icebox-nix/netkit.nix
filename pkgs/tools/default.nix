@@ -3,4 +3,5 @@ prev: {
   snapdrop = (prev.callPackage ./snapdrop { });
   atomdns = (prev.callPackage ./atomdns { });
   overture = (prev.callPackage ./overture { });
+  dcompass = (prev.callPackage ./dcompass { });
 }
