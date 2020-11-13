@@ -7,8 +7,8 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "LEXUGE";
     repo = pname;
-    rev = "c0a9e962b4a54e978b4553f2432f2ee155ee4fc1";
-    sha256 = "0gkmq1p30s6lji1l59r01sbp74jwi9c21bs4i0jmq3s89p3fj2nd";
+    rev = "92462eeb5563427d6f996ff5ac5c5cb0a6795538";
+    sha256 = "1ssv8l4ipil9nqf566zv3dfhja28bgkg25gphczjiiwsmhc0isp6";
   };
 
   cargoSha256 = "18ajpvds0bvys7y7nlmbwa5i880vh123cvwps1751hc98xbq5agc";
