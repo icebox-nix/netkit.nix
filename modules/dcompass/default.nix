@@ -11,6 +11,12 @@ in {
   options.netkit.dcompass = {
     enable = mkEnableOption "Dcompass DNS server";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.dcompass-bin;
+      description = "Package of dcompass to use. e.g. pkgs.dcompass";
+    };
+
     settings = mkOption {
       type = types.unspecified;
       description = ''
@@ -31,7 +37,7 @@ in {
       description = "Dcompass DNS service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script = "${pkgs.dcompass}/bin/dcompass -c ${confFile}";
+      script = "${cfg.package}/bin/dcompass -c ${confFile}";
       serviceConfig = {
         # CAP_NET_BIND_SERVICE: Bind arbitary ports by unprivileged user.
         AmbientCapabilities = "CAP_NET_BIND_SERVICE";

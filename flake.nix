@@ -43,6 +43,7 @@
         atomdns = (importer [ self.overlay ] system).atomdns;
         overture = (importer [ self.overlay ] system).overture;
         dcompass = (importer [ self.overlay ] system).dcompass;
+        dcompass-bin = (importer [ self.overlay ] system).dcompass-bin;
       } //
         # XMM7360-PCI kernel module packages
         (builtins.listToAttrs (map (v:
