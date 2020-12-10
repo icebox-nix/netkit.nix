@@ -166,10 +166,13 @@ in {
       # ${iptables}/bin/iptables -w -I FORWARD -i wlan-ap0 -s 192.168.12.0/24 -j ACCEPT
       # Accept the packets from wlan-station0 to forward them back to the LAN
       # ${iptables}/bin/iptables -w -I FORWARD -i wlan-station0 -d 192.168.12.0/24 -j ACCEPT
+      # Last two changes the TTL to mitigate detections against wifi sharing.
       script = ''
         ${iptables}/bin/iptables -w -t nat -I POSTROUTING -s 192.168.12.0/24 ! -o wlan-ap0 -j MASQUERADE
         ${iptables}/bin/iptables -w -I FORWARD -i wlan-ap0 -s 192.168.12.0/24 -j ACCEPT
+        ${iptables}/bin/iptables -t mangle -A PREROUTING -i wlan-ap0 -j TTL --ttl-set 64
         ${iptables}/bin/iptables -w -I FORWARD -i wlan-station0 -d 192.168.12.0/24 -j ACCEPT
+        ${iptables}/bin/iptables -t mangle -A PREROUTING -i wlan-station0 -j TTL --ttl-set 64
       '';
       serviceConfig = {
         # We want to keep it up, else the rules set up are discarded immediately.
