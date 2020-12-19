@@ -11,14 +11,15 @@ let
   redirProxyPortStr = toString cfg.redirPort;
 
   # Run iptables 4 and 6 together.
+  # Currently, Clash doesn't work with IPv6 well, not forwarding
+  # ${
+  #   optionalString config.networking.enableIPv6 ''
+  #     ${iptables}/bin/ip6tables -w "$@"
+  #   ''
+  # }
   helper = ''
     ip46tables() {
       ${iptables}/bin/iptables -w "$@"
-      ${
-        optionalString config.networking.enableIPv6 ''
-          ${iptables}/bin/ip6tables -w "$@"
-        ''
-      }
     }
   '';
 
