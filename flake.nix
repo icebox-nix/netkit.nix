@@ -14,7 +14,7 @@
           overlays = overlays;
         });
       inherit (nixos.lib.attrsets) recursiveUpdate;
-      kernelVer = [ "5_8" "5_4" "latest" ];
+      kernelVer = [ "5_8" "5_4" "latest" "zen" "latest_hardened" ];
     in recursiveUpdate (recursiveUpdate {
       overlay = (final: prev: (import ./pkgs { inherit kernelVer prev; }));
       overlays = {
