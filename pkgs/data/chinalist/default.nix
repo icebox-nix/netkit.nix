@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "chinalist-${format}";
-  version = "2020-12-14";
+  version = "2020-12-20";
 
   src = fetchFromGitHub {
     owner = "felixonmars";
     repo = "dnsmasq-china-list";
-    rev = "ce5b0343efb3264c962fe7942f0282fa6d9ea707";
-    sha256 = "1dif1npk9d2wzkxp2m1cwjs5vqq7m78vxlprl8x3pn6abixni4fd";
+    rev = "8de1c98ca3fe533575c916843d4b966f51512f22";
+    sha256 = "1lpvd31v8kd5hr6q9sr6ablai9k7zbkrpafxslvfmmj76gm582wd";
   };
 
   patches = [ ./overture.patch ];

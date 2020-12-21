@@ -2,7 +2,7 @@
 
 stdenv.mkDerivation rec {
   pname = "xmm7360-pci";
-  version = "2020-01-15-${kernel.version}";
+  version = "2020-01-15";
 
   src = fetchFromGitHub {
     owner = "xmm7360";
