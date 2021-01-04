@@ -7,7 +7,7 @@ let
   inherit (config.std.interface) devices;
 
   hostapdConfigFile = pkgs.writeText "hostapd.conf" (generators.toKeyValue { } {
-    interface = cfg.interface;
+    interface = "wlan-ap0";
     driver = "nl80211";
     ssid = cfg.ssid;
     hw_mode = "g";
