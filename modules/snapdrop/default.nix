@@ -1,16 +1,10 @@
-self:
+nixos-cn:
 { pkgs, config, lib, ... }:
 
 with lib;
 
 let
   cfg = config.netkit.snapdrop;
-  src = pkgs.fetchFromGitHub {
-    owner = "RobinLinus";
-    repo = "snapdrop";
-    rev = "97121c438aa130c1ebf6b902e1404f1760ee80d9";
-    sha256 = "1a9kbn6g8z67z14416mm04k1cls2k574lbks8lx6dndwqczir4fy";
-  };
 in {
   options.netkit.snapdrop = {
     enable = mkOption {
@@ -26,23 +20,23 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [ self.overlays.tools ];
+    nixpkgs.overlays = [nixos-cn.overlay];
 
     users.users.snapdrop = {
       description = "Snapdrop server user";
       isSystemUser = true;
     };
 
-    networking.firewall.allowedTCPPorts = [ (cfg.port) 3344 ];
+    networking.firewall.allowedTCPPorts = [ (cfg.port) 3000 ];
 
     systemd.services.snapdrop-node = {
       description = "Backend server for snapdrop";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script = "${pkgs.nodejs}/bin/node index.js";
+      script = "${pkgs.nixoscn.snapdrop}/bin/snapdrop";
 
       serviceConfig = {
-        WorkingDirectory = "${pkgs.snapdrop}";
+        WorkingDirectory = "${pkgs.nixoscn.snapdrop}";
         User = "snapdrop";
       };
     };
@@ -59,13 +53,13 @@ in {
               expires epoch;
 
               location / {
-                  root   ${src}/client;
+                  root   ${pkgs.nixoscn.snapdrop}/lib/share/snapdrop/client;
                   index  index.html index.htm;
               }
 
               location /server {
                   proxy_connect_timeout 300;
-                  proxy_pass http://127.0.0.1:3344;
+                  proxy_pass http://127.0.0.1:3000;
                   proxy_set_header Connection "upgrade";
                   proxy_set_header Upgrade $http_upgrade;
                   proxy_set_header X-Forwarded-for $remote_addr;
@@ -73,7 +67,7 @@ in {
 
               error_page   500 502 503 504  /50x.html;
               location = /50x.html {
-                  root   ${src}/client;
+                  root   ${pkgs.nixoscn.snapdrop}/lib/share/snapdrop/client;
               }
           }
         }

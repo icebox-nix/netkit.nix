@@ -3,10 +3,11 @@
 
   inputs = {
     nixos.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixos-cn.url = "github:nixos-cn/flakes";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixos, flake-utils }@inputs:
+  outputs = { self, nixos, flake-utils, nixos-cn }@inputs:
     let
       importer = overlays: system:
         (import nixos {
@@ -29,7 +30,7 @@
         clash = (import ./modules/clash self);
         frpc = (import ./modules/frpc);
         minecraft-server = (import ./modules/minecraft-server);
-        snapdrop = (import ./modules/snapdrop self);
+        snapdrop = (import ./modules/snapdrop nixos-cn);
         xmm7360 = (import ./modules/xmm7360 self);
         smartdns = (import ./modules/smartdns self);
         atomdns = (import ./modules/atomdns self);

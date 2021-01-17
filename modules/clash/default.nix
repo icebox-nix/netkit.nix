@@ -33,6 +33,12 @@ let
         description = "Enable Clash transparent proxy module.";
       };
 
+      dashboard.port = mkOption {
+        type = types.port;
+        default = 3333;
+        description = "Port for YACD dashboard to listen on.";
+      };
+
       clashUserName = mkOption {
         type = types.str;
         default = "clash";
@@ -89,7 +95,7 @@ in {
     # Yacd
     services.lighttpd = {
       enable = true;
-      port = 3000;
+      port = cfg.dashboard.port;
       document-root = "${pkgs.yacd}/bin";
     };
 
