@@ -37,6 +37,7 @@
         atomdns = (import ./modules/atomdns self);
         overture = (import ./modules/overture self);
         dcompass = (import ./modules/dcompass self);
+        subconverter = (import ./modules/subconverter self);
       };
     } // (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
       packages = ({
@@ -47,7 +48,7 @@
         subconverter = (importer [ self.overlay ] system).subconverter;
         dcompass = dcompass.packages."${system}".dcompass-cn;
         dcompass-bin = (importer [ self.overlay ] system).dcompass-bin;
-                maxmind-geoip = (importer [ self.overlay ] system).maxmind-geoip;
+        maxmind-geoip = (importer [ self.overlay ] system).maxmind-geoip;
         chinalist-raw = (importer [ self.overlay ] system).chinalist-raw;
         chinalist-overture =
           (importer [ self.overlay ] system).chinalist-overture;

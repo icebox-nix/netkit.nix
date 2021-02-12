@@ -3,8 +3,7 @@ nixos-cn:
 
 with lib;
 
-let
-  cfg = config.netkit.snapdrop;
+let cfg = config.netkit.snapdrop;
 in {
   options.netkit.snapdrop = {
     enable = mkOption {
@@ -20,7 +19,7 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [nixos-cn.overlay];
+    nixpkgs.overlays = [ nixos-cn.overlay ];
 
     users.users.snapdrop = {
       description = "Snapdrop server user";
