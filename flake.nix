@@ -5,9 +5,10 @@
     nixos.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-cn.url = "github:nixos-cn/flakes";
     flake-utils.url = "github:numtide/flake-utils";
+    dcompass.url = "github:LEXUGE/dcompass";
   };
 
-  outputs = { self, nixos, flake-utils, nixos-cn }@inputs:
+  outputs = { self, nixos, flake-utils, nixos-cn, dcompass, ... }@inputs:
     let
       importer = overlays: system:
         (import nixos {
@@ -15,8 +16,8 @@
           overlays = overlays;
         });
       inherit (nixos.lib.attrsets) recursiveUpdate;
-      kernelVer = [ "5_9" "5_4" "latest" "zen" "latest_hardened" ];
-    in recursiveUpdate (recursiveUpdate {
+      kernelVer = [ "5_4" "latest" "zen" "latest_hardened" ];
+    in {
       overlay = (final: prev: (import ./pkgs { inherit kernelVer prev; }));
       overlays = {
         tools = (final: prev: (import ./pkgs/tools prev));
@@ -37,27 +38,25 @@
         overture = (import ./modules/overture self);
         dcompass = (import ./modules/dcompass self);
       };
-    } (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
+    } // (flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
       packages = ({
         yacd = (importer [ self.overlay ] system).yacd;
         smartdns = (importer [ self.overlay ] system).smartdns;
         atomdns = (importer [ self.overlay ] system).atomdns;
         overture = (importer [ self.overlay ] system).overture;
-        dcompass = (importer [ self.overlay ] system).dcompass;
+        subconverter = (importer [ self.overlay ] system).subconverter;
+        dcompass = dcompass.packages."${system}".dcompass-cn;
         dcompass-bin = (importer [ self.overlay ] system).dcompass-bin;
-      } //
-        # XMM7360-PCI kernel module packages
-        (builtins.listToAttrs (map (v:
-          nixos.lib.attrsets.nameValuePair "xmm7360-pci_${v}"
-          (importer [ self.overlay ] system)."xmm7360-pci_${v}") kernelVer)));
-    }))) (flake-utils.lib.eachDefaultSystem (system: {
-      packages = {
-        maxmind-geoip = (importer [ self.overlay ] system).maxmind-geoip;
+                maxmind-geoip = (importer [ self.overlay ] system).maxmind-geoip;
         chinalist-raw = (importer [ self.overlay ] system).chinalist-raw;
         chinalist-overture =
           (importer [ self.overlay ] system).chinalist-overture;
         chinalist-smartdns =
           (importer [ self.overlay ] system).chinalist-smartdns;
-      };
+      } //
+        # XMM7360-PCI kernel module packages
+        (builtins.listToAttrs (map (v:
+          nixos.lib.attrsets.nameValuePair "xmm7360-pci_${v}"
+          (importer [ self.overlay ] system)."xmm7360-pci_${v}") kernelVer)));
     }));
 }
