@@ -5,7 +5,7 @@ with lib;
 
 let
   cfg = config.netkit.subconverter;
-  configFile = pkgs.writeText "pref.ini" (generators.toKeyValue { } cfg.config);
+  configFile = pkgs.writeText "pref.ini" (generators.toINI { } cfg.config);
 in {
   options.netkit.subconverter = {
     enable = mkOption {
