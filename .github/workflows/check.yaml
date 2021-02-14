@@ -20,7 +20,7 @@ jobs:
     - uses: cachix/cachix-action@v8
       if: ${{ github.event_name == 'push' }}
       with:
-        name: dram
+        name: lexuge
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
     # Run the general flake checks
