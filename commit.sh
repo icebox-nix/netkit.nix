@@ -7,7 +7,7 @@ git pull
 echo -n "Formatting & Checking..."
 find . -type f -name '*.nix' -exec nixfmt {} +
 nix flake update --recreate-lock-file
-nix flake check
+nix flake check --no-build
 echo "Done."
 
 echo -n "Adding to git..."
