@@ -1,4 +1,3 @@
-self:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -33,7 +32,6 @@ in {
 
   config = mkIf cfg.enable {
     boot.extraModulePackages = [ cfg.package ];
-    nixpkgs.overlays = [ self.overlays.drivers ];
 
     # Currently, due to absence of power management, xmm7360 needs to be brought down and reconnected on resume.
     std.misc.restartOnResumeServices = [ "xmm7360" ];

@@ -1,4 +1,3 @@
-nixos-cn:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -11,6 +10,12 @@ in {
       default = false;
       description = "Enable snapdrop local instance";
     };
+
+    package = mkOption {
+      type = types.package;
+      description = "Package of snapdrop to use. e.g. pkgs.nixoscn.snapdrop";
+    };
+
     port = mkOption {
       type = types.port;
       default = 8080;
@@ -19,8 +24,6 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [ nixos-cn.overlay ];
-
     users.users.snapdrop = {
       description = "Snapdrop server user";
       isSystemUser = true;
@@ -32,10 +35,10 @@ in {
       description = "Backend server for snapdrop";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script = "${pkgs.nixoscn.snapdrop}/bin/snapdrop";
+      script = "${cfg.package}/bin/snapdrop";
 
       serviceConfig = {
-        WorkingDirectory = "${pkgs.nixoscn.snapdrop}";
+        WorkingDirectory = "${cfg.package}";
         User = "snapdrop";
       };
     };
@@ -52,7 +55,7 @@ in {
               expires epoch;
 
               location / {
-                  root   ${pkgs.nixoscn.snapdrop}/lib/share/snapdrop/client;
+                  root   ${cfg.package}/lib/share/snapdrop/client;
                   index  index.html index.htm;
               }
 
@@ -66,7 +69,7 @@ in {
 
               error_page   500 502 503 504  /50x.html;
               location = /50x.html {
-                  root   ${pkgs.nixoscn.snapdrop}/lib/share/snapdrop/client;
+                  root   ${cfg.package}/lib/share/snapdrop/client;
               }
           }
         }

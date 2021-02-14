@@ -1,4 +1,3 @@
-self:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -21,8 +20,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [ self.overlays.tools ];
-
     users.users.subconverter = {
       description = "subconverter user";
       isSystemUser = true;
@@ -33,7 +30,7 @@ in {
       wantedBy = [ "multi-user.target" ];
       description = "Subconverter service";
       script = ''
-        ${pkgs.subconverter}/bin/subconverter -f ${configFile}
+        ${pkgs.netkit.subconverter}/bin/subconverter -f ${configFile}
       '';
       serviceConfig = {
         User = "dcompass";

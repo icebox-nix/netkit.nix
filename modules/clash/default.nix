@@ -1,4 +1,3 @@
-self:
 { pkgs, config, lib, ... }:
 
 with lib;
@@ -83,20 +82,18 @@ in {
   };
 
   config = mkIf (cfg.enable) {
-    nixpkgs.overlays = [ self.overlays.tools self.overlays.data ];
-
     # Sometimes clash doesn't work well on DNS with captive hotspot
     # std.misc.restartOnResumeServices = [ "clash" ];
 
     environment.etc."clash/Country.mmdb".source =
-      "${pkgs.maxmind-geoip}/Country.mmdb"; # Bring pre-installed geoip data into directory.
+      "${pkgs.netkit.maxmind-geoip}/Country.mmdb"; # Bring pre-installed geoip data into directory.
     environment.etc."clash/config.yaml".source = configPath;
 
     # Yacd
     services.lighttpd = {
       enable = true;
       port = cfg.dashboard.port;
-      document-root = "${pkgs.yacd}/bin";
+      document-root = "${pkgs.netkit.yacd}/bin";
     };
 
     users.users.${clashUserName} = {

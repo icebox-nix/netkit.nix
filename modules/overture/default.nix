@@ -1,4 +1,3 @@
-self:
 { lib, pkgs, config, ... }:
 
 with lib;
@@ -25,8 +24,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [ self.overlays.tools ];
-
     users.users.overture = {
       description = "overture user";
       isSystemUser = true;
@@ -36,7 +33,7 @@ in {
       description = "Overture DNS service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script = "${pkgs.overture}/bin/overture -v -c ${confFile} -p ${
+      script = "${pkgs.netkit.overture}/bin/overture -v -c ${confFile} -p ${
           toString cfg.processors
         }";
       serviceConfig = {

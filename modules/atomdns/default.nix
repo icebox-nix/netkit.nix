@@ -1,4 +1,3 @@
-self:
 { lib, pkgs, config, ... }:
 
 with lib;
@@ -19,8 +18,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [ self.overlays.tools ];
-
     users.users.atomdns = {
       description = "atomdns user";
       isSystemUser = true;

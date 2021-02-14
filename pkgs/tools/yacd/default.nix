@@ -1,4 +1,4 @@
-{ yarn2nix-moretea, fetchFromGitHub }:
+{ lib, yarn2nix-moretea, fetchFromGitHub }:
 
 yarn2nix-moretea.mkYarnPackage rec {
   name = "yacd";
@@ -28,4 +28,11 @@ yarn2nix-moretea.mkYarnPackage rec {
   postInstall = ''
     cp -r $out/libexec/yacd/deps/yacd/public/* $out/bin/
   '';
+
+  meta = with lib; {
+    description = "Yet Another Clash Dashboard";
+    homepage = "https://github.com/haishanh/yacd";
+    license = licenses.free;
+    platforms = [ "x86_64-linux" ];
+  };
 }

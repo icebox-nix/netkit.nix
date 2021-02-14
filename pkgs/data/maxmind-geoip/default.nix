@@ -1,4 +1,4 @@
-{ stdenv, fetchurl }:
+{ lib, stdenv, fetchurl }:
 
 stdenv.mkDerivation rec {
   pname = "maxmind-geoip";
@@ -14,4 +14,11 @@ stdenv.mkDerivation rec {
   installPhase = ''
     install -D -m755 $src $out/Country.mmdb
   '';
+
+  meta = with lib; {
+    description = "Maxmind GeoIP database";
+    homepage = "https://github.com/Dreamacro/maxmind-geoip";
+    license = licenses.unfreeRedistributable;
+    platforms = platforms.all;
+  };
 }

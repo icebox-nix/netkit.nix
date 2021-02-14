@@ -1,4 +1,3 @@
-self:
 { lib, pkgs, config, ... }:
 
 with lib;
@@ -13,7 +12,7 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.dcompass-bin;
+      default = pkgs.netkit.dcompass-bin;
       description = "Package of dcompass to use. e.g. pkgs.dcompass";
     };
 
@@ -26,8 +25,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [ self.overlays.tools ];
-
     users.users.dcompass = {
       description = "dcompass user";
       isSystemUser = true;

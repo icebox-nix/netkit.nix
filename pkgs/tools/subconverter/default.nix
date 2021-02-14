@@ -1,4 +1,4 @@
-{ stdenv, fetchzip }:
+{ lib, stdenv, fetchzip }:
 
 stdenv.mkDerivation rec {
   pname = "subconverter";
@@ -13,4 +13,11 @@ stdenv.mkDerivation rec {
   installPhase = ''
     install -D -m755 $src/subconverter $out/bin/subconverter
   '';
+
+  meta = with lib; {
+    description = "Subscription converter";
+    homepage = "https://github.com/tindy2013/subconverter";
+    license = licenses.gpl3Plus;
+    platforms = [ "x86_64-linux" ];
+  };
 }
