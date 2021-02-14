@@ -25,4 +25,4 @@ jobs:
 
     # Run the general flake checks
     - run: nix flake check -vL
-    - run: nix flake archive
+
