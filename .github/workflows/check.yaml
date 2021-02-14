@@ -16,4 +16,4 @@ jobs:
     # Configure Nix to enable flakes
     - run: echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
     # Run the general flake checks
-    - run: nix flake check
+    - run: nix flake check --no-build
