@@ -63,6 +63,9 @@
 
         checks = packages;
       })) // {
+        publicKey =
+          "lexuge.cachix.org-1:RRFg8AxcexeBd33smnmcayMLU6r2wbVKbZHWtg2dKnY=";
+
         overlay = final: prev: { netkit = recurseIntoAttrs (pkgSet prev); };
         nixosModule = { ... }: {
           nixpkgs.overlays = [ self.overlay ];
