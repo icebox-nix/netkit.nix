@@ -9,32 +9,34 @@ Intended to work out-of-box without any complicated configuration, `netkit.nix` 
 2. Add module `netkit.nixosModule` to your `flake.nix`'s `nixosConfiguration.modules` list.
 3. Configure modules on your needs. For details, see [wiki page](https://github.com/icebox-nix/netkit.nix/wiki).
 ```nix
-netkit = {
-   clash = {
-     enable = true;
-     redirPort =
-       7892; # This must be the same with the one in your clash.yaml
-   };
-
-   wifi-relay = {
-     interface = "wlp0s20f3"; # Change according to your device
-     ssid = "netkit.nix";
-     passphrase = "88888888";
-   };
-
-   xmm7360 = {
-	 enable = true;
-     autoStart = true;
-     config = {
-       mycard = {
-         apn = "3gnet";
-         nodefaultroute = false;
-         noresolv = true;
-       };
+{
+  netkit = {
+     clash = {
+       enable = true;
+       redirPort =
+         7892; # This must be the same with the one in your clash.yaml
      };
-     package = pkgs.xmm7360-pci_5_7;
-   };
-};
+  
+     wifi-relay = {
+       interface = "wlp0s20f3"; # Change according to your device
+       ssid = "netkit.nix";
+       passphrase = "88888888";
+     };
+  
+     xmm7360 = {
+  	 enable = true;
+       autoStart = true;
+       config = {
+         mycard = {
+           apn = "3gnet";
+           nodefaultroute = false;
+           noresolv = true;
+         };
+       };
+       package = pkgs.xmm7360-pci_5_7;
+     };
+  };
+}
 ```
 
 # List of plugins available
