@@ -54,25 +54,21 @@ Intended to work out-of-box without any complicated configuration, `netkit.nix` 
 │   ├───aarch64-linux
 │   │   ├───atomdns: derivation 'atomdns-0.2.0'
 │   │   ├───chinalist: derivation 'chinalist-raw-2020-12-20'
-│   │   ├───dcompass: derivation 'dcompass-0.1'
 │   │   ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
 │   │   └───overture: derivation 'overture-1.6.1'
 │   ├───i686-linux
 │   │   ├───atomdns: derivation 'atomdns-0.2.0'
 │   │   ├───chinalist: derivation 'chinalist-raw-2020-12-20'
-│   │   ├───dcompass: derivation 'dcompass-0.1'
 │   │   ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
 │   │   └───overture: derivation 'overture-1.6.1'
 │   ├───x86_64-darwin
 │   │   ├───atomdns: derivation 'atomdns-0.2.0'
 │   │   ├───chinalist: derivation 'chinalist-raw-2020-12-20'
-│   │   ├───dcompass: derivation 'dcompass-0.1'
 │   │   ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
 │   │   └───overture: derivation 'overture-1.6.1'
 │   └───x86_64-linux
 │       ├───atomdns: derivation 'atomdns-0.2.0'
 │       ├───chinalist: derivation 'chinalist-raw-2020-12-20'
-│       ├───dcompass: derivation 'dcompass-0.1'
 │       ├───dcompass-bin: derivation 'dcompass-bin-git'
 │       ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
 │       ├───overture: derivation 'overture-1.6.1'
@@ -88,25 +84,21 @@ Intended to work out-of-box without any complicated configuration, `netkit.nix` 
     ├───aarch64-linux
     │   ├───atomdns: package 'atomdns-0.2.0'
     │   ├───chinalist: package 'chinalist-raw-2020-12-20'
-    │   ├───dcompass: package 'dcompass-0.1'
     │   ├───maxmind-geoip: package 'maxmind-geoip-20201212'
     │   └───overture: package 'overture-1.6.1'
     ├───i686-linux
     │   ├───atomdns: package 'atomdns-0.2.0'
     │   ├───chinalist: package 'chinalist-raw-2020-12-20'
-    │   ├───dcompass: package 'dcompass-0.1'
     │   ├───maxmind-geoip: package 'maxmind-geoip-20201212'
     │   └───overture: package 'overture-1.6.1'
     ├───x86_64-darwin
     │   ├───atomdns: package 'atomdns-0.2.0'
     │   ├───chinalist: package 'chinalist-raw-2020-12-20'
-    │   ├───dcompass: package 'dcompass-0.1'
     │   ├───maxmind-geoip: package 'maxmind-geoip-20201212'
     │   └───overture: package 'overture-1.6.1'
     └───x86_64-linux
         ├───atomdns: package 'atomdns-0.2.0'
         ├───chinalist: package 'chinalist-raw-2020-12-20'
-        ├───dcompass: package 'dcompass-0.1'
         ├───dcompass-bin: package 'dcompass-bin-git'
         ├───maxmind-geoip: package 'maxmind-geoip-20201212'
         ├───overture: package 'overture-1.6.1'
