@@ -46,11 +46,12 @@
       aggregatePkgSets = f: dir:
         mergeSets (map (name: f (dir + "/${name}")) (attrNames (readDir dir)));
 
-              pkgSet = nixpkgs: (makePackageSet (n: nixpkgs.callPackage n { }) [
+      pkgSet = nixpkgs:
+        (makePackageSet (n: nixpkgs.callPackage n { }) [
           ./pkgs/data
           ./pkgs/tools
-        ]) // (aggregatePkgSets (n: import n { inherit nixpkgs; })
-          ./pkgs/drivers);
+        ])
+        // (aggregatePkgSets (n: import n { inherit nixpkgs; }) ./pkgs/drivers);
     in (eachDefaultSystem (system:
       let
         pkgs = (import nixpkgs {

@@ -6,7 +6,7 @@ Intended to work out-of-box without any complicated configuration, `netkit.nix` 
 
 # How to use it?
 1. Add `netkit` to flake using `inputs.netkit.url = "github:icebox-nix/netkit.nix";`.
-2. Add respective modules (like `netkit.nixosModules.clash`) to your `flake.nix`'s `nixosConfiguration.modules` list.
+2. Add module `netkit.nixosModule` to your `flake.nix`'s `nixosConfiguration.modules` list.
 3. Configure modules on your needs. For details, see [wiki page](https://github.com/icebox-nix/netkit.nix/wiki).
 ```nix
 netkit = {
@@ -44,3 +44,74 @@ netkit = {
 - [frpc](https://github.com/fatedier/frp): A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.
 - minecraft-server: On-demand minecraft server with more options.
 - [xmm7360](https://github.com/xmm7360/xmm7360-pci): A module with service for setting up PCI driver for Fibocom L850-GL modem (PCI ID 8086:7360).
+- [dcompass](https://github.com/LEXUGE/dcompass): Programmable DNS written in pure Rust.
+
+# Flake Outputs
+```
+├───checks
+│   ├───aarch64-linux
+│   │   ├───atomdns: derivation 'atomdns-0.2.0'
+│   │   ├───chinalist: derivation 'chinalist-raw-2020-12-20'
+│   │   ├───dcompass: derivation 'dcompass-0.1'
+│   │   ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
+│   │   └───overture: derivation 'overture-1.6.1'
+│   ├───i686-linux
+│   │   ├───atomdns: derivation 'atomdns-0.2.0'
+│   │   ├───chinalist: derivation 'chinalist-raw-2020-12-20'
+│   │   ├───dcompass: derivation 'dcompass-0.1'
+│   │   ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
+│   │   └───overture: derivation 'overture-1.6.1'
+│   ├───x86_64-darwin
+│   │   ├───atomdns: derivation 'atomdns-0.2.0'
+│   │   ├───chinalist: derivation 'chinalist-raw-2020-12-20'
+│   │   ├───dcompass: derivation 'dcompass-0.1'
+│   │   ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
+│   │   └───overture: derivation 'overture-1.6.1'
+│   └───x86_64-linux
+│       ├───atomdns: derivation 'atomdns-0.2.0'
+│       ├───chinalist: derivation 'chinalist-raw-2020-12-20'
+│       ├───dcompass: derivation 'dcompass-0.1'
+│       ├───dcompass-bin: derivation 'dcompass-bin-git'
+│       ├───maxmind-geoip: derivation 'maxmind-geoip-20201212'
+│       ├───overture: derivation 'overture-1.6.1'
+│       ├───subconverter: derivation 'subconverter-0.6.4'
+│       ├───xmm7360-pci_5_4: derivation 'xmm7360-pci-2020-01-15'
+│       ├───xmm7360-pci_latest: derivation 'xmm7360-pci-2020-01-15'
+│       ├───xmm7360-pci_latest_hardened: derivation 'xmm7360-pci-2020-01-15'
+│       ├───xmm7360-pci_zen: derivation 'xmm7360-pci-2020-01-15'
+│       └───yacd: derivation 'yacd'
+├───nixosModule: unknown
+├───overlay: Nixpkgs overlay
+└───packages
+    ├───aarch64-linux
+    │   ├───atomdns: package 'atomdns-0.2.0'
+    │   ├───chinalist: package 'chinalist-raw-2020-12-20'
+    │   ├───dcompass: package 'dcompass-0.1'
+    │   ├───maxmind-geoip: package 'maxmind-geoip-20201212'
+    │   └───overture: package 'overture-1.6.1'
+    ├───i686-linux
+    │   ├───atomdns: package 'atomdns-0.2.0'
+    │   ├───chinalist: package 'chinalist-raw-2020-12-20'
+    │   ├───dcompass: package 'dcompass-0.1'
+    │   ├───maxmind-geoip: package 'maxmind-geoip-20201212'
+    │   └───overture: package 'overture-1.6.1'
+    ├───x86_64-darwin
+    │   ├───atomdns: package 'atomdns-0.2.0'
+    │   ├───chinalist: package 'chinalist-raw-2020-12-20'
+    │   ├───dcompass: package 'dcompass-0.1'
+    │   ├───maxmind-geoip: package 'maxmind-geoip-20201212'
+    │   └───overture: package 'overture-1.6.1'
+    └───x86_64-linux
+        ├───atomdns: package 'atomdns-0.2.0'
+        ├───chinalist: package 'chinalist-raw-2020-12-20'
+        ├───dcompass: package 'dcompass-0.1'
+        ├───dcompass-bin: package 'dcompass-bin-git'
+        ├───maxmind-geoip: package 'maxmind-geoip-20201212'
+        ├───overture: package 'overture-1.6.1'
+        ├───subconverter: package 'subconverter-0.6.4'
+        ├───xmm7360-pci_5_4: package 'xmm7360-pci-2020-01-15'
+        ├───xmm7360-pci_latest: package 'xmm7360-pci-2020-01-15'
+        ├───xmm7360-pci_latest_hardened: package 'xmm7360-pci-2020-01-15'
+        ├───xmm7360-pci_zen: package 'xmm7360-pci-2020-01-15'
+        └───yacd: package 'yacd'
+```
