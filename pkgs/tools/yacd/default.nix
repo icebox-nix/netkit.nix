@@ -5,7 +5,8 @@ stdenv.mkDerivation rec {
   version = "0.2.14";
 
   src = fetchzip {
-    url = "https://github.com/haishanh/yacd/releases/download/v${version}/yacd.tar.xz";
+    url =
+      "https://github.com/haishanh/yacd/releases/download/v${version}/yacd.tar.xz";
     sha256 = "sha256-q5U3XwYb9gwpxPzqhXC8UkDTSUY5291AOZDexNRMFHM=";
   };
 

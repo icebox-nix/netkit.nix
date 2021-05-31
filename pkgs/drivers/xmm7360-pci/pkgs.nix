@@ -16,7 +16,8 @@ stdenv.mkDerivation rec {
 
   prePatch = ''
     substituteInPlace rpc/open_xdatachannel.py --replace "#!/usr/bin/env python3"  "#!${
-      (python3.withPackages (ps: [ ps.ConfigArgParse ps.pyroute2 ]))
+      (python3.withPackages
+        (ps: [ ps.ConfigArgParse ps.pyroute2 ps.dbus-python ]))
     }/bin/python3"
   '';
 
