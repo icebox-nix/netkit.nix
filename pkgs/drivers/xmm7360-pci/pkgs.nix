@@ -8,8 +8,8 @@ stdenv.mkDerivation rec {
     owner = "xmm7360";
     repo = "xmm7360-pci";
     # https://github.com/xmm7360/xmm7360-pci/issues/96
-    rev = "ee2d227ae3a15bff5f254b8ea85881c65bf3c49c";
-    sha256 = "sha256-LmX292T3LfYaP43cDMWR6uBaFfzZ8YxV/aDyjKqFlE4=";
+    rev = "0060149958d00b9cec87b73cd610c136f69e5275";
+    sha256 = "0nr7adlwglpw6hp44x0pq8xhv7kik7nsb8yzbxllvy2v1pinyflv";
   };
 
   nativeBuildInputs = kernel.moduleBuildDependencies;

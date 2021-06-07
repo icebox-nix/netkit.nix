@@ -1,6 +1,7 @@
 { nixpkgs }:
 let
-  kernelVer = [ "5_4" "latest" "zen" "latest_hardened" "5_10" ];
+  # kernelVer = [ "5_4" "latest" "zen" "latest_hardened" "5_10" ];
+  kernelVer = [ "5_4" "5_10" ];
   # We have to ensure the target is linux first in order to evaluate
 in if nixpkgs.pkgs.stdenv.isLinux then
   (builtins.listToAttrs (map (v:
