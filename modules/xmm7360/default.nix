@@ -64,7 +64,7 @@ in {
         # Clean-up
         ExecStopPost = postStopScript;
         Restart = "on-failure";
-        SuccessExitStatus = 1;
+        # SuccessExitStatus = 1;
       };
     };
   };
