@@ -10,14 +10,21 @@ let
   redirProxyPortStr = toString cfg.redirPort;
 
   # Run iptables 4 and 6 together.
+  # helper = ''
+  #   ip46tables() {
+  #     ${iptables}/bin/iptables -w "$@"
+  #     ${
+  #       optionalString config.networking.enableIPv6 ''
+  #         ${iptables}/bin/ip6tables -w "$@"
+  #       ''
+  #     }
+  #   }
+  # '';
+
+  # Clash doesn't work well with IPv6
   helper = ''
     ip46tables() {
       ${iptables}/bin/iptables -w "$@"
-      ${
-        optionalString config.networking.enableIPv6 ''
-          ${iptables}/bin/ip6tables -w "$@"
-        ''
-      }
     }
   '';
 
