@@ -244,7 +244,7 @@ in {
         description = "Minecraft server service user";
         home = cfg.dataDir;
         createHome = true;
-        uid = config.ids.uids.minecraft;
+        # uid = config.ids.uids.minecraft;
       };
 
       systemd.services.minecraft-server = {
