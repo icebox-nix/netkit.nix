@@ -28,7 +28,9 @@ in {
     users.users.dcompass = {
       description = "dcompass user";
       isSystemUser = true;
+      group = "dcompass";
     };
+    users.groups.dcompass = {};
 
     systemd.services.dcompass = {
       description = "Dcompass DNS service";

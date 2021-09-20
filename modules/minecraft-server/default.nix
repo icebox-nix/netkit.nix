@@ -244,8 +244,10 @@ in {
         description = "Minecraft server service user";
         home = cfg.dataDir;
         createHome = true;
+        group = "minecraft";
         # uid = config.ids.uids.minecraft;
       };
+      users.groups.minecraft = {};
 
       systemd.services.minecraft-server = {
         description = "Minecraft Server Service";

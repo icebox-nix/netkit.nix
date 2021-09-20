@@ -106,7 +106,9 @@ in {
     users.users.${clashUserName} = {
       description = "Clash deamon user";
       isSystemUser = true;
+      group = "clash";
     };
+    users.groups.clash = {};
 
     systemd.services.clash = let
       # Delete the chain to avoid unnecessary incident.

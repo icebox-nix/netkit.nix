@@ -29,7 +29,9 @@ in {
     users.users.frpc = {
       description = "frp client service user";
       isSystemUser = true;
+      group = "frpc";
     };
+    users.groups.frpc = {};
 
     systemd.services.frpc = {
       description = "frp client service";
