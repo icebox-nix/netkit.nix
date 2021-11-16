@@ -245,6 +245,7 @@ in {
         home = cfg.dataDir;
         createHome = true;
         group = "minecraft";
+        isSystemUser = true;
         # uid = config.ids.uids.minecraft;
       };
       users.groups.minecraft = {};

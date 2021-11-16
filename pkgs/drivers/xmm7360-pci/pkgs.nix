@@ -2,14 +2,13 @@
 
 stdenv.mkDerivation rec {
   pname = "xmm7360-pci";
-  version = "2020-01-15";
+  version = "2020-08-02";
 
   src = fetchFromGitHub {
-    owner = "xmm7360";
+    owner = "icebox-nix";
     repo = "xmm7360-pci";
-    # https://github.com/xmm7360/xmm7360-pci/issues/96
-    rev = "0060149958d00b9cec87b73cd610c136f69e5275";
-    sha256 = "0nr7adlwglpw6hp44x0pq8xhv7kik7nsb8yzbxllvy2v1pinyflv";
+    rev = "cec857f2416663caceb83b0c6f7f50f78a70cb0e";
+    sha256 = "sha256-SAVlRnPqAjw8kLc2lF8De6wh3hD8hwRpQzfuEGxkoZo=";
   };
 
   nativeBuildInputs = kernel.moduleBuildDependencies;
