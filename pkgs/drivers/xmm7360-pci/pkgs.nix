@@ -7,8 +7,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "icebox-nix";
     repo = "xmm7360-pci";
-    rev = "cec857f2416663caceb83b0c6f7f50f78a70cb0e";
-    sha256 = "sha256-SAVlRnPqAjw8kLc2lF8De6wh3hD8hwRpQzfuEGxkoZo=";
+    rev = "03ad6150c991299c403085e967d900c031a29c94";
+    sha256 = "sha256-yJeZAxzeQY0mBa5akcpPChi8nGo/XzjXR1y1yrif/rM=";
   };
 
   nativeBuildInputs = kernel.moduleBuildDependencies;
